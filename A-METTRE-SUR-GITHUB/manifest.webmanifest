@@ -1,0 +1,16 @@
+{
+  "name": "Pronos Parquet · la NBA sans parier d'argent",
+  "short_name": "Pronos Parquet",
+  "description": "Suis la NBA et fais tes pronostics avec des jetons sans valeur. Jamais d'argent.",
+  "lang": "fr",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#070708",
+  "theme_color": "#070708",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
