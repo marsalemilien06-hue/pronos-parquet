@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Pronos Parquet · la NBA sans parier d'argent</title>
-<meta name="description" content="Suis la NBA, fais tes pronostics avec des jetons sans valeur et vois l'argent que tu ne mises plus. Gratuit, sans inscription, jamais d'argent.">
+<meta name="description" content="Suis la NBA, fais tes pronostics avec des jetons sans valeur et vois l'argent que tu ne mises plus. Gratuit, compte facultatif, jamais d'argent.">
 <meta name="theme-color" content="#070708">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icons/icon-192.png" type="image/png">
@@ -284,6 +284,29 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
 .ibox td { text-align: right; padding: 6px; border-bottom: 1px solid var(--line); }
 .ibox th:first-child, .ibox td:first-child { text-align: left; }
 .ibox tr:last-child td { border-bottom: 0; }
+/* Compte */
+.acbtn { display: flex; align-items: center; gap: 7px; border: 0; border-left: 1px solid var(--line); background: transparent; color: var(--ink); padding: 0 16px; font-family: var(--fd); font-weight: 600; font-size: 1rem; letter-spacing: 0.06em; text-transform: uppercase; max-width: 150px; }
+.acbtn span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.acbtn:hover { background: var(--soft); }
+.acdot { flex: none; width: 8px; height: 8px; border-radius: 50%; background: var(--muted); }
+.acdot.ok { background: var(--win); } .acdot.wait { background: #f5b942; } .acdot.off { background: var(--lose); }
+.acov { align-items: center; }
+.acp { max-width: 420px; }
+.acbody { padding: 8px 16px 18px; display: flex; flex-direction: column; gap: 12px; }
+.acbody h3 { margin: 0; font-family: var(--fd); font-size: 1.3rem; letter-spacing: 0.06em; text-transform: uppercase; }
+.acbody p { margin: 0; }
+.acmodes { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--line); border-radius: 2px; overflow: hidden; }
+.acmodes button { min-height: 42px; border: 0; background: transparent; color: var(--muted); font-family: var(--fd); font-weight: 600; font-size: 1rem; letter-spacing: 0.06em; text-transform: uppercase; }
+.acmodes button[aria-pressed="true"] { background: var(--soft); color: var(--ink); box-shadow: inset 0 -2px 0 var(--red); }
+.acbody label { display: flex; flex-direction: column; gap: 6px; font-weight: 500; }
+.acbody input { min-height: 44px; padding: 8px 12px; border-radius: 2px; border: 1px solid var(--line); background: #000; color: var(--ink); font: inherit; }
+.acbody input:focus { outline: 2px solid var(--red); outline-offset: -1px; }
+.acwho { background: var(--soft); border-left: 3px solid var(--win); padding: 12px 14px; border-radius: 2px; display: flex; flex-direction: column; gap: 2px; }
+.acwho b { font-family: var(--fd); font-size: 1.6rem; letter-spacing: 0.03em; }
+.acrow { display: flex; gap: 8px; flex-wrap: wrap; }
+.acdanger { color: var(--lose); align-self: flex-start; }
+.acok { color: #bfeedd; background: #0f1d17; padding: 10px 12px; border-radius: 2px; }
+@media (max-width: 560px) { .acbtn { padding: 0 12px; max-width: 110px; } .wallet .sol { padding: 4px 12px 4px 16px; } }
 </style>
 
 </head>
@@ -302,6 +325,7 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
     </nav>
     <div class="wallet">
       <div class="sol"><small>Solde en jetons</small><b id="bal">40</b><small id="debt"></small></div>
+      <button class="acbtn" id="acbtn" type="button" hidden><i class="acdot" id="acdot"></i><span id="acname">Compte</span></button>
     </div>
   </div>
 </header>
@@ -339,9 +363,10 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
 </div>
 
 <button class="jump" id="jump" type="button" hidden>Mon ticket</button>
+<div class="ov acov" id="acov" hidden><div class="ovp acp" id="acp" role="dialog" aria-modal="true" aria-label="Mon compte"></div></div>
 <div class="ov" id="ov" hidden><div class="ovp" id="ovp" role="dialog" aria-modal="true" aria-label="Infos du match"></div></div>
 
-<p class="foot">Pronos Parquet se joue uniquement avec des jetons sans valeur : on ne peut ni acheter de jetons, ni les échanger contre de l'argent. L'appli est faite pour suivre la NBA sans parier d'argent. Si tu as du mal à t'arrêter, ou si un proche est concerné, appelle Joueurs Info Service au 09 74 75 13 13 (anonyme et gratuit, tous les jours de 8h à 2h) ou va sur joueurs-info-service.fr. Calendrier, résultats, blessés, stats et classement : ESPN, actualisés toutes les heures quand l'appareil est connecté. Appli indépendante, gratuite et sans publicité, sans lien avec la NBA, ses équipes ni ESPN. Les écussons sont des pastilles aux couleurs des équipes, pas les logos officiels. Tes jetons et ton compteur d'économies restent sur cet appareil.</p>
+<p class="foot">Pronos Parquet se joue uniquement avec des jetons sans valeur : on ne peut ni acheter de jetons, ni les échanger contre de l'argent. L'appli est faite pour suivre la NBA sans parier d'argent. Si tu as du mal à t'arrêter, ou si un proche est concerné, appelle Joueurs Info Service au 09 74 75 13 13 (anonyme et gratuit, tous les jours de 8h à 2h) ou va sur joueurs-info-service.fr. Calendrier, résultats, blessés, stats et classement : ESPN, actualisés toutes les heures quand l'appareil est connecté. Appli indépendante, gratuite et sans publicité, sans lien avec la NBA, ses équipes ni ESPN. Les écussons sont des pastilles aux couleurs des équipes, pas les logos officiels. Tes jetons et ton compteur d'économies restent sur cet appareil. Si tu crées un compte (un pseudo et un mot de passe, sans e-mail), ils sont aussi sauvegardés en ligne pour les retrouver sur un autre appareil ou après avoir effacé l'appli.</p>
 
 <script>
 (function () {
@@ -444,14 +469,22 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
   var mem = null;
   var START = 40, BONUS = 25;
   function fresh() { return { balance: START, bets: [], sims: {}, lastBonus: "", seq: 1, loan: null, streak: { last: "", count: 0 } }; }
+  function norm(o) {
+    if (!o || typeof o.balance !== "number") return null;
+    o.bets = o.bets || [];
+    o.bets.forEach(function (b) { if (!b.legs) b.legs = [{ gid: b.gid, side: b.side, team: b.team, odds: b.odds }]; });
+    if (!o.streak) o.streak = { last: "", count: 0 };
+    if (o.loan === undefined) o.loan = null;
+    if (!o.sims) o.sims = {};
+    if (!o.seq) o.seq = o.bets.length + 1;
+    return o;
+  }
   function load() {
-    try { var r = localStorage.getItem(KEY); if (r) { var o = JSON.parse(r); if (o && typeof o.balance === "number") { (o.bets || []).forEach(function (b) { if (!b.legs) b.legs = [{ gid: b.gid, side: b.side, team: b.team, odds: b.odds }]; }); return o; } } } catch (e) {}
+    try { var r = localStorage.getItem(KEY); if (r) { var o = norm(JSON.parse(r)); if (o) return o; } } catch (e) {}
     return mem || fresh();
   }
   var S = load();
-  if (!S.streak) S.streak = { last: "", count: 0 };
-  if (S.loan === undefined) S.loan = null;
-  function save() { mem = S; try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
+  function save() { mem = S; try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} acTouched(); }
 
   var sel = [], stake = 10, curDay = null, tab = "games", query = "", resetArmed = false, betFilter = "all", noteMsg = "";
   var $ = function (s) { return document.querySelector(s); };
@@ -1103,7 +1136,7 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
   var EKEY = "pronosParquet_eco";
   var E = (function () { try { return JSON.parse(localStorage.getItem(EKEY)) || null; } catch (e) { return null; } })();
   var ecoMem = E, ecoMsg = "";
-  function ecoSave() { ecoMem = E; try { localStorage.setItem(EKEY, JSON.stringify(E)); } catch (e) {} }
+  function ecoSave() { ecoMem = E; try { localStorage.setItem(EKEY, JSON.stringify(E)); } catch (e) {} acTouched(); }
   var PER = { jour: 1, semaine: 7, mois: 30.44 };
   function fmtEur(n) { return Math.round(n).toLocaleString("fr-FR") + " €"; }
   function ecoCalc() {
@@ -1133,7 +1166,7 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
     }
     if (!c || (E && E.editing)) {
       var today = new Date().toLocaleDateString("sv-SE");
-      h += '<div class="ecoform"><h3>Suivre ce que tu économises</h3><p class="imuted">Indique combien tu misais avant, et depuis quand tu ne paries plus. Ces infos restent sur ton appareil.</p>' +
+      h += '<div class="ecoform"><h3>Suivre ce que tu économises</h3><p class="imuted">Indique combien tu misais avant, et depuis quand tu ne paries plus. Ces infos restent sur ton appareil, et sur ton compte si tu en as créé un.</p>' +
         '<label>Avant, je misais environ<span class="row"><input type="number" id="ecoamt" min="1" step="1" inputmode="numeric" value="' + (E && E.amount ? E.amount : "") + '" placeholder="50"> € par <select id="ecoper"><option value="jour">jour</option><option value="semaine">semaine</option><option value="mois">mois</option></select></span></label>' +
         '<label>Je ne parie plus depuis le<input type="date" id="ecosince" max="' + today + '" value="' + (E && E.since ? E.since : today) + '"></label>' +
         '<p class="err" id="ecoerr"></p><button class="parier on" type="button" id="ecosave">Enregistrer</button></div>';
@@ -1191,6 +1224,199 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
     });
   }
   setInterval(syncSchedule, HOUR);
+  /* ---------- Compte et sauvegarde en ligne (Supabase) ----------
+     Sans compte, tout reste sur l'appareil comme avant. Avec un compte (pseudo + mot de passe,
+     pas d'e-mail), jetons, paris et compteur d'économies sont aussi gardés en ligne.
+     Pour activer : remplir SUPA_URL et SUPA_KEY (clé publique "anon" du projet Supabase). */
+  var SUPA_URL = "";
+  var SUPA_KEY = "";
+  var SUPA_LIB = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js";
+  var MAIL_DOMAIN = "@joueurs.pronos-parquet.app"; // adresse fictive fabriquée à partir du pseudo, jamais utilisée
+  var MODKEY = "pronosParquet_mod", BASEKEY = "pronosParquet_base"; // mod : dernier changement ici ; base : version en ligne connue au dernier échange
+  var AC = { sb: null, user: null, open: false, mode: "login", msg: "", ok: "", busy: false, state: "", at: 0, timer: null, delArmed: false, pulling: false };
+
+  function localMod() { try { return parseInt(localStorage.getItem(MODKEY), 10) || 0; } catch (e) { return 0; } }
+  function setLocalMod(t) { try { localStorage.setItem(MODKEY, String(t)); } catch (e) {} }
+  function baseMod() { try { return parseInt(localStorage.getItem(BASEKEY), 10) || 0; } catch (e) { return 0; } }
+  function setBase(t) { try { localStorage.setItem(BASEKEY, String(t)); } catch (e) {} }
+  function acPseudo() { var u = AC.user; if (!u) return ""; return (u.user_metadata && u.user_metadata.pseudo) || String(u.email || "").split("@")[0]; }
+
+  // Appelée à chaque sauvegarde locale : note l'heure et envoie en ligne un peu plus tard.
+  function acTouched() {
+    setLocalMod(Date.now());
+    if (!AC || !AC.user) return;
+    clearTimeout(AC.timer);
+    AC.state = "wait"; acRenderBtn();
+    AC.timer = setTimeout(acPush, 1500);
+  }
+  function acPayload() { return { game: S, eco: E, mod: localMod() || Date.now(), v: 1 }; }
+  function acPush() {
+    if (!AC.sb || !AC.user) return Promise.resolve();
+    clearTimeout(AC.timer);
+    AC.state = "wait"; acRenderBtn();
+    var pl = acPayload();
+    return AC.sb.from("saves").upsert({ user_id: AC.user.id, data: pl, updated_at: new Date().toISOString() })
+      .then(function (r) {
+        if (r.error) throw r.error;
+        setBase(pl.mod);
+        AC.state = "ok"; AC.at = Date.now(); acRenderBtn(); if (AC.open) acRender();
+      })
+      .catch(function () { AC.state = "off"; acRenderBtn(); if (AC.open) acRender(); });
+  }
+  function acApply(d) {
+    var g = norm(d && d.game);
+    if (!g) return false;
+    S = g; mem = S; E = d.eco || null; ecoMem = E;
+    try { localStorage.setItem(KEY, JSON.stringify(S)); localStorage.setItem(EKEY, JSON.stringify(E)); } catch (e) {}
+    setLocalMod(d.mod || Date.now()); setBase(d.mod || 0);
+    sel = []; stake = 10;
+    renderAll(); renderSlip();
+    return true;
+  }
+  // force : "remote" = prendre la sauvegarde du compte (connexion), "local" = envoyer celle de l'appareil (création).
+  function acPull(force) {
+    if (!AC.sb || !AC.user || AC.pulling) return Promise.resolve();
+    AC.pulling = true;
+    return AC.sb.from("saves").select("data").eq("user_id", AC.user.id).maybeSingle()
+      .then(function (r) {
+        AC.pulling = false;
+        if (r.error) throw r.error;
+        var d = r.data && r.data.data;
+        if (force === "local" || !d) return acPush();
+        // Si la sauvegarde en ligne a bougé depuis notre dernier échange (jeu sur un autre appareil), elle passe devant.
+        var rm = d.mod || 0, lm = localMod();
+        if (force === "remote" || rm > baseMod()) { acApply(d); AC.state = "ok"; AC.at = Date.now(); acRenderBtn(); return; }
+        if (lm > rm) return acPush();
+        AC.state = "ok"; AC.at = Date.now(); acRenderBtn();
+      })
+      .catch(function () { AC.pulling = false; AC.state = "off"; acRenderBtn(); });
+  }
+
+  function acErr(e) {
+    var m = String((e && (e.message || e.error_description)) || e || "").toLowerCase();
+    if (m.indexOf("invalid login") >= 0) return "Pseudo ou mot de passe incorrect.";
+    if (m.indexOf("already") >= 0) return "Ce pseudo est déjà pris. Choisis-en un autre.";
+    if (m.indexOf("password") >= 0 && m.indexOf("6") >= 0) return "Le mot de passe doit faire au moins 6 caractères.";
+    if (m.indexOf("rate") >= 0 || m.indexOf("too many") >= 0) return "Trop d'essais d'un coup. Réessaie dans quelques minutes.";
+    if (m.indexOf("fetch") >= 0 || m.indexOf("network") >= 0 || !navigator.onLine) return "Pas de connexion internet. Réessaie quand tu es connecté.";
+    return "Ça n'a pas marché. Réessaie dans un instant.";
+  }
+  function acSubmit() {
+    var pseudo = ($("#acpseudo").value || "").trim(), pw = $("#acpw").value || "", low = pseudo.toLowerCase();
+    if (!/^[a-z0-9_.-]{3,20}$/.test(low)) { AC.msg = "Pseudo : 3 à 20 caractères, lettres sans accent, chiffres, point, tiret ou _."; acRender(); return; }
+    if (pw.length < 6) { AC.msg = "Le mot de passe doit faire au moins 6 caractères."; acRender(); return; }
+    if (AC.mode === "signup" && pw !== ($("#acpw2").value || "")) { AC.msg = "Les deux mots de passe ne sont pas identiques."; acRender(); return; }
+    if (!AC.sb) { AC.msg = "Le service de comptes n'est pas joignable. Vérifie ta connexion internet."; acRender(); return; }
+    AC.busy = true; AC.msg = ""; acRender();
+    var email = low + MAIL_DOMAIN, mode = AC.mode;
+    var p = mode === "signup"
+      ? AC.sb.auth.signUp({ email: email, password: pw, options: { data: { pseudo: pseudo } } })
+      : AC.sb.auth.signInWithPassword({ email: email, password: pw });
+    p.then(function (r) {
+      if (r.error) throw r.error;
+      if (!r.data || !r.data.session) throw new Error("no session");
+      AC.user = r.data.session.user;
+      AC.busy = false;
+      AC.ok = mode === "signup" ? "Compte créé. Ta partie est maintenant sauvegardée en ligne." : "Connecté. Ta partie a été récupérée.";
+      return acPull(mode === "signup" ? "local" : "remote");
+    }).then(function () { acRender(); acRenderBtn(); })
+      .catch(function (e) { AC.busy = false; AC.msg = acErr(e); acRender(); });
+  }
+  function acLogout() {
+    var done = function () { AC.user = null; AC.state = ""; AC.ok = ""; AC.msg = ""; acRender(); acRenderBtn(); };
+    (AC.state === "wait" ? acPush() : Promise.resolve()).then(function () { return AC.sb.auth.signOut(); }).then(done, done);
+  }
+  function acDelete() {
+    if (!AC.delArmed) { AC.delArmed = true; acRender(); setTimeout(function () { AC.delArmed = false; if (AC.open) acRender(); }, 5000); return; }
+    AC.delArmed = false; AC.busy = true; acRender();
+    AC.sb.rpc("delete_my_account").then(function (r) {
+      if (r.error) throw r.error;
+      return AC.sb.auth.signOut();
+    }).then(function () {
+      AC.user = null; AC.busy = false; AC.state = ""; AC.ok = "Compte supprimé. Ta partie reste sur cet appareil."; acRender(); acRenderBtn();
+    }).catch(function (e) { AC.busy = false; AC.msg = acErr(e); acRender(); });
+  }
+
+  function acRenderBtn() {
+    var b = $("#acbtn"); if (!b) return;
+    b.hidden = !SUPA_URL;
+    $("#acname").textContent = AC.user ? acPseudo() : "Compte";
+    $("#acdot").className = "acdot" + (AC.user ? " " + (AC.state || "ok") : "");
+    b.setAttribute("aria-label", AC.user ? "Mon compte : " + acPseudo() : "Créer un compte ou se connecter");
+  }
+  function acRender() {
+    var h = '<div class="ihead"><h3 style="margin:0;font-family:var(--fd);letter-spacing:.06em;text-transform:uppercase">Mon compte</h3><button class="x" type="button" id="acx" aria-label="Fermer">×</button></div><div class="acbody">';
+    if (AC.ok) h += '<p class="acok">' + esc(AC.ok) + "</p>";
+    if (AC.user) {
+      var st = AC.state === "wait" ? "Sauvegarde en cours…" : AC.state === "off" ? "Pas de connexion : la sauvegarde partira dès que tu seras de nouveau en ligne." : AC.at ? "Sauvegardé à " + timeStr(AC.at) + "." : "Sauvegardé.";
+      h += '<div class="acwho"><small class="imuted">Connecté en tant que</small><b>' + esc(acPseudo()) + '</b><span class="imuted">' + st + "</span></div>";
+      h += "<p>Tes jetons, tes paris et ton compteur d'économies sont gardés sur ton compte. Connecte-toi avec le même pseudo sur un autre téléphone ou ordinateur pour les retrouver.</p>";
+      h += '<div class="acrow"><button class="link" type="button" id="acsync"' + (AC.busy ? " disabled" : "") + '>Sauvegarder maintenant</button><button class="link" type="button" id="acout"' + (AC.busy ? " disabled" : "") + ">Se déconnecter</button></div>";
+      h += '<button class="link acdanger" type="button" id="acdel"' + (AC.busy ? " disabled" : "") + ">" + (AC.delArmed ? "Confirmer : supprimer mon compte" : "Supprimer mon compte") + "</button>";
+      if (AC.delArmed) h += '<p class="imuted">Ton compte et sa sauvegarde en ligne seront effacés. Ta partie reste sur cet appareil.</p>';
+      if (AC.msg) h += '<p class="err">' + esc(AC.msg) + "</p>";
+    } else {
+      var su = AC.mode === "signup";
+      h += '<div class="acmodes" role="group" aria-label="Choix"><button type="button" data-acmode="login" aria-pressed="' + !su + '">Se connecter</button><button type="button" data-acmode="signup" aria-pressed="' + su + '">Créer un compte</button></div>';
+      h += '<p class="imuted">' + (su
+        ? "Garde ta partie en sécurité et retrouve-la sur un autre appareil. Pas besoin d'e-mail : juste un pseudo et un mot de passe. Note-les bien : sans e-mail, un mot de passe oublié ne peut pas être récupéré."
+        : "Connecte-toi pour récupérer ta partie sauvegardée.") + "</p>";
+      h += '<form id="acform" class="acbody" style="padding:0" novalidate>';
+      h += '<label>Pseudo<input id="acpseudo" autocomplete="username" autocapitalize="off" spellcheck="false" maxlength="20"></label>';
+      h += '<label>Mot de passe<input id="acpw" type="password" autocomplete="' + (su ? "new-password" : "current-password") + '" minlength="6"></label>';
+      if (su) h += '<label>Confirme le mot de passe<input id="acpw2" type="password" autocomplete="new-password"></label>';
+      if (su) h += '<p class="imuted">Ta partie actuelle sur cet appareil (jetons, paris, économies) sera rattachée au nouveau compte.</p>';
+      else h += '<p class="imuted">La partie de ton compte remplacera celle de cet appareil.</p>';
+      h += '<p class="err" id="acerr">' + esc(AC.msg) + "</p>";
+      h += '<button class="parier" type="submit"' + (AC.busy ? " disabled" : "") + ">" + (AC.busy ? "Patiente…" : su ? "Créer mon compte" : "Me connecter") + "</button></form>";
+    }
+    h += "</div>";
+    var keep = {}; ["acpseudo", "acpw", "acpw2"].forEach(function (id) { var el = $("#" + id); if (el) keep[id] = el.value; });
+    $("#acp").innerHTML = h;
+    Object.keys(keep).forEach(function (id) { var el = $("#" + id); if (el) el.value = keep[id]; });
+  }
+  function acOpen() { AC.open = true; AC.msg = ""; AC.ok = ""; AC.delArmed = false; $("#acov").hidden = false; acRender(); var f = $("#acpseudo"); if (f) f.focus(); }
+  function acClose() { AC.open = false; $("#acov").hidden = true; }
+
+  document.addEventListener("click", function (e) {
+    if (e.target.id === "acov") { acClose(); return; }
+    var t = e.target.closest("button"); if (!t) return;
+    if (t.id === "acbtn") { acOpen(); return; }
+    if (t.id === "acx") { acClose(); return; }
+    if (t.dataset.acmode) { AC.mode = t.dataset.acmode; AC.msg = ""; acRender(); var f = $("#acpseudo"); if (f) f.focus(); return; }
+    if (t.id === "acsync") { AC.ok = ""; acPush(); acRender(); return; }
+    if (t.id === "acout") { acLogout(); return; }
+    if (t.id === "acdel") { acDelete(); return; }
+  });
+  document.addEventListener("submit", function (e) { if (e.target.id === "acform") { e.preventDefault(); if (!AC.busy) acSubmit(); } });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape" && AC.open) acClose(); });
+  // Retour sur l'appli ou retour du réseau : on récupère ce qui a pu être joué ailleurs, et on renvoie ce qui attendait.
+  document.addEventListener("visibilitychange", function () { if (document.visibilityState === "visible" && AC.user) acPull(); });
+  window.addEventListener("online", function () { if (AC.user) acPull(); });
+  window.addEventListener("pagehide", function () { if (AC.user && AC.state === "wait") acPush(); });
+
+  function acStart() {
+    acRenderBtn();
+    if (!SUPA_URL || !SUPA_KEY) return;
+    var sc = document.createElement("script");
+    sc.src = SUPA_LIB; sc.async = true;
+    sc.onload = function () {
+      if (!window.supabase || !window.supabase.createClient) return;
+      AC.sb = window.supabase.createClient(SUPA_URL, SUPA_KEY, { auth: { persistSession: true, autoRefreshToken: true, storageKey: "pronosParquet_auth" } });
+      AC.sb.auth.getSession().then(function (r) {
+        var s = r && r.data && r.data.session;
+        if (s) { AC.user = s.user; AC.state = "wait"; acRenderBtn(); acPull(); }
+      });
+      AC.sb.auth.onAuthStateChange(function (ev, s) {
+        if (ev === "SIGNED_OUT") { AC.user = null; AC.state = ""; acRenderBtn(); }
+        else if (s && s.user) { AC.user = s.user; acRenderBtn(); }
+      });
+      setInterval(function () { if (AC.user && document.visibilityState === "visible") acPull(); }, 5 * 60e3);
+    };
+    document.head.appendChild(sc);
+  }
+  acStart();
+
   document.addEventListener("keydown", function (e) { if (e.key === "Escape" && info.gid) closeInfo(); });
 
   curDay = defaultDay();
