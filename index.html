@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Pronos Parquet · la NBA sans parier d'argent</title>
-<meta name="description" content="Suis la NBA, fais tes pronostics avec des jetons sans valeur et vois l'argent que tu ne mises plus. Gratuit, compte facultatif, jamais d'argent.">
+<title>Pronos Parquet · NBA picks without betting money</title>
+<meta name="description" content="Follow the NBA, make picks with worthless play tokens and see the money you no longer bet. Free, optional account, never any real money.">
 <meta name="theme-color" content="#070708">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icons/icon-192.png" type="image/png">
@@ -333,6 +333,9 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
 .ibox td { text-align: right; padding: 6px; border-bottom: 1px solid var(--line); }
 .ibox th:first-child, .ibox td:first-child { text-align: left; }
 .ibox tr:last-child td { border-bottom: 0; }
+/* Langue */
+.langb { min-height: 32px; min-width: 40px; padding: 0 10px; border: 1px solid var(--line); background: var(--card); color: var(--ink); border-radius: 999px; font-family: var(--fd); font-weight: 700; font-size: 0.9rem; letter-spacing: 0.08em; }
+.langb:hover { border-color: var(--red); }
 /* Soutien */
 .support { max-width: 1240px; margin: 8px auto 0; padding: 0 16px; display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; }
 .support small, .ecosup small { color: var(--muted); font-size: 0.82rem; max-width: 520px; }
@@ -372,20 +375,21 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
       <svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="14" fill="#ff2d3a"/><path d="M16 2v28M2 16h28M6 6c6 5 6 15 0 20M26 6c-6 5-6 15 0 20" fill="none" stroke="#070708" stroke-width="1.8"/></svg>
       <span>Pronos <em>Parquet</em></span>
     </div>
+    <button class="langb" id="langb" type="button">EN</button>
     <nav class="nav" aria-label="Navigation">
-      <button class="nv" type="button" data-tab="games" aria-pressed="true">Matchs</button>
-      <button class="nv" type="button" data-tab="bets" aria-pressed="false">Mes paris</button>
-      <button class="nv" type="button" data-tab="standings" aria-pressed="false">Classement</button>
-      <button class="nv" type="button" data-tab="eco" aria-pressed="false">Mes économies</button>
+      <button class="nv" type="button" data-tab="games" aria-pressed="true" data-en="Games">Matchs</button>
+      <button class="nv" type="button" data-tab="bets" aria-pressed="false" data-en="My bets">Mes paris</button>
+      <button class="nv" type="button" data-tab="standings" aria-pressed="false" data-en="Standings">Classement</button>
+      <button class="nv" type="button" data-tab="eco" aria-pressed="false" data-en="My savings">Mes économies</button>
     </nav>
     <div class="wallet">
-      <div class="sol"><small>Solde en jetons</small><b id="bal">40</b><small id="debt"></small></div>
+      <div class="sol"><small data-en="Token balance">Solde en jetons</small><b id="bal">40</b><small id="debt"></small></div>
       <button class="acbtn" id="acbtn" type="button" hidden><i class="acdot" id="acdot"></i><span id="acname">Compte</span></button>
     </div>
   </div>
 </header>
 
-<a class="helpbar" href="tel:+33974751313"><b>Envie de parier pour de vrai ?</b> Joueurs Info Service : <u>09 74 75 13 13</u> · anonyme et gratuit, tous les jours de 8h à 2h</a>
+<a class="helpbar" href="tel:+33974751313" data-en-href="https://www.gamblingtherapy.org" data-en="<b>Feel the urge to bet for real?</b> Free, confidential help worldwide: <u>gamblingtherapy.org</u> · or see the helplines in “My savings”"><b>Envie de parier pour de vrai ?</b> Joueurs Info Service : <u>09 74 75 13 13</u> · anonyme et gratuit, tous les jours de 8h à 2h</a>
 <div class="layout">
   
 
@@ -393,18 +397,18 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
     <div class="toolbar">
     <label class="search" for="q">
       <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="#ff2d3a" stroke-width="2.4"/><path d="M15.5 15.5L21 21" stroke="#ff2d3a" stroke-width="2.4" stroke-linecap="round"/></svg>
-      <span class="sr">Chercher une équipe</span>
-      <input id="q" type="search" placeholder="Équipe, ex. Lakers" autocomplete="off">
+      <span class="sr" data-en="Search for a team">Chercher une équipe</span>
+      <input id="q" type="search" placeholder="Équipe, ex. Lakers" data-en-ph="Team, e.g. Lakers" autocomplete="off">
     </label>
     <div class="cal" id="days"></div>
     </div>
     <div class="card">
       <div class="chead"><span><i class="dot" style="display:inline-block"></i>Basketball &bull; NBA</span><span id="count"></span></div>
       <div class="tabs">
-        <button class="tab" type="button" data-tab="games" aria-pressed="true">Matchs</button>
-        <button class="tab" type="button" data-tab="bets" aria-pressed="false">Paris</button>
-        <button class="tab" type="button" data-tab="standings" aria-pressed="false">Classement</button>
-        <button class="tab" type="button" data-tab="eco" aria-pressed="false">Économies</button>
+        <button class="tab" type="button" data-tab="games" aria-pressed="true" data-en="Games">Matchs</button>
+        <button class="tab" type="button" data-tab="bets" aria-pressed="false" data-en="Bets">Paris</button>
+        <button class="tab" type="button" data-tab="standings" aria-pressed="false" data-en="Standings">Classement</button>
+        <button class="tab" type="button" data-tab="eco" aria-pressed="false" data-en="Savings">Économies</button>
       </div>
     </div>
     <p class="loginnote" id="note" hidden></p>
@@ -418,14 +422,38 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
 </div>
 
 <button class="jump" id="jump" type="button" hidden>Mon ticket</button>
-<div class="ov acov" id="acov" hidden><div class="ovp acp" id="acp" role="dialog" aria-modal="true" aria-label="Mon compte"></div></div>
+<div class="ov acov" id="acov" hidden><div class="ovp acp" id="acp" role="dialog" aria-modal="true" aria-label="Mon compte" data-en-al="My account"></div></div>
 <div class="ov" id="ov" hidden><div class="ovp" id="ovp" role="dialog" aria-modal="true" aria-label="Infos du match"></div></div>
 
-<div class="support" id="support" hidden><a class="supbtn" id="suplink" href="#" target="_blank" rel="noopener">&#9749; Soutenir Pronos Parquet</a><small>Facultatif, ça ne débloque rien : l'appli reste gratuite et sans pub pour tout le monde. Ça aide à payer son entretien.</small></div>
-<p class="foot">Pronos Parquet se joue uniquement avec des jetons sans valeur : on ne peut ni acheter de jetons, ni les échanger contre de l'argent. L'appli est faite pour suivre la NBA sans parier d'argent. Si tu as du mal à t'arrêter, ou si un proche est concerné, appelle Joueurs Info Service au 09 74 75 13 13 (anonyme et gratuit, tous les jours de 8h à 2h) ou va sur joueurs-info-service.fr. Calendrier, résultats, blessés, stats et classement : ESPN, actualisés toutes les heures quand l'appareil est connecté. Appli indépendante, gratuite et sans publicité, sans lien avec la NBA, ses équipes ni ESPN. Les écussons sont des pastilles aux couleurs des équipes, pas les logos officiels. Tes jetons et ton compteur d'économies restent sur cet appareil. Si tu crées un compte (un pseudo et un mot de passe, sans e-mail), ils sont aussi sauvegardés en ligne pour les retrouver sur un autre appareil ou après avoir effacé l'appli. <a href="confidentialite.html" style="color:inherit">Confidentialité</a></p>
+<div class="support" id="support" hidden><a class="supbtn" id="suplink" href="#" target="_blank" rel="noopener" data-en="&#9749; Support Pronos Parquet">&#9749; Soutenir Pronos Parquet</a><small data-en="Optional, it doesn't unlock anything: the app stays free and ad-free for everyone. It helps cover its upkeep.">Facultatif, ça ne débloque rien : l'appli reste gratuite et sans pub pour tout le monde. Ça aide à payer son entretien.</small></div>
+<p class="foot" data-en="Pronos Parquet is played only with tokens that have no value: you can't buy tokens or exchange them for money. The app is made to follow the NBA without betting money. If you find it hard to stop, or someone close to you is affected, free and confidential help exists: Gambling Therapy (gamblingtherapy.org, worldwide, many languages), 1-800-MY-RESET in the US, 0808 8020 133 in the UK, 09 74 75 13 13 in France. Schedule, results, injuries, stats and standings: ESPN, refreshed every hour when your device is online. Independent, free and ad-free app, not affiliated with the NBA, its teams or ESPN. Team badges are circles in team colors, not official logos. Your tokens and savings tracker stay on this device. If you create an account (a username and a password, no email), they are also saved online so you can get them back on another device or after deleting the app. <a href=&quot;privacy.html&quot; style=&quot;color:inherit&quot;>Privacy</a>">Pronos Parquet se joue uniquement avec des jetons sans valeur : on ne peut ni acheter de jetons, ni les échanger contre de l'argent. L'appli est faite pour suivre la NBA sans parier d'argent. Si tu as du mal à t'arrêter, ou si un proche est concerné, appelle Joueurs Info Service au 09 74 75 13 13 (anonyme et gratuit, tous les jours de 8h à 2h) ou va sur joueurs-info-service.fr. Calendrier, résultats, blessés, stats et classement : ESPN, actualisés toutes les heures quand l'appareil est connecté. Appli indépendante, gratuite et sans publicité, sans lien avec la NBA, ses équipes ni ESPN. Les écussons sont des pastilles aux couleurs des équipes, pas les logos officiels. Tes jetons et ton compteur d'économies restent sur cet appareil. Si tu crées un compte (un pseudo et un mot de passe, sans e-mail), ils sont aussi sauvegardés en ligne pour les retrouver sur un autre appareil ou après avoir effacé l'appli. <a href="confidentialite.html" style="color:inherit">Confidentialité</a></p>
 
 <script>
 (function () {
+  /* ---------- Langue : anglais par défaut, français si l'appareil est en français ---------- */
+  var LANG = (function () {
+    try { var st = localStorage.getItem("pronosParquet_lang"); if (st === "fr" || st === "en") return st; } catch (e) {}
+    var ls = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || ""];
+    return String(ls[0] || "").toLowerCase().indexOf("fr") === 0 ? "fr" : "en";
+  })();
+  var EN = LANG === "en";
+  function L(fr, en) { return EN ? en : fr; }
+  var LOC = EN ? (String(navigator.language || "").toLowerCase().indexOf("en") === 0 ? navigator.language : "en-US") : "fr-FR";
+  var DEC = EN ? "." : ",";
+  document.documentElement.lang = LANG;
+  if (!EN) document.title = "Pronos Parquet · la NBA sans parier d'argent";
+  if (EN) {
+    document.querySelectorAll("[data-en]").forEach(function (el) { el.innerHTML = el.getAttribute("data-en"); });
+    document.querySelectorAll("[data-en-ph]").forEach(function (el) { el.setAttribute("placeholder", el.getAttribute("data-en-ph")); });
+    document.querySelectorAll("[data-en-al]").forEach(function (el) { el.setAttribute("aria-label", el.getAttribute("data-en-al")); });
+    document.querySelectorAll("[data-en-href]").forEach(function (el) { el.setAttribute("href", el.getAttribute("data-en-href")); });
+  }
+  var lb = document.getElementById("langb");
+  if (lb) {
+    lb.textContent = EN ? "FR" : "EN";
+    lb.setAttribute("aria-label", EN ? "Passer en français" : "Switch to English");
+    lb.addEventListener("click", function () { try { localStorage.setItem("pronosParquet_lang", EN ? "fr" : "en"); } catch (e) {} location.reload(); });
+  }
   var TEAMS = {
     ATL: "Atlanta Hawks", BOS: "Boston Celtics", BKN: "Brooklyn Nets", CHA: "Charlotte Hornets", CHI: "Chicago Bulls",
     CLE: "Cleveland Cavaliers", DAL: "Dallas Mavericks", DEN: "Denver Nuggets", DET: "Detroit Pistons", GSW: "Golden State Warriors",
@@ -450,7 +478,7 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
   };
   var FEED = {
     updated: "2026-11-16T11:30:00Z",
-    source: "bookmakers australiens, relevés via un site de pronostics",
+    source: L("bookmakers australiens, relevés via un site de pronostics", "Australian bookmakers, collected from a tips site"),
     games: [
     {"i": "73719634", "s": "2026-11-15T00:00:00Z", "h": "NOP", "a": "DEN", "sh": 108, "sa": 116},
     {"i": "73719636", "s": "2026-11-15T00:30:00Z", "h": "CLE", "a": "DAL", "sh": 127, "sa": 117},
@@ -549,10 +577,10 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
   var sel = [], stake = 10, curDay = null, tab = "games", query = "", resetArmed = false, betFilter = "all", noteMsg = "";
   var $ = function (s) { return document.querySelector(s); };
 
-  function fmtOdd(n) { return n.toFixed(2).replace(".", ","); }
-  function fmtInt(n) { return Math.round(n).toLocaleString("fr-FR"); }
+  function fmtOdd(n) { return n.toFixed(2).replace(".", DEC); }
+  function fmtInt(n) { return Math.round(n).toLocaleString(LOC); }
   function dayKey(ms) { return new Date(ms).toLocaleDateString("sv-SE"); }
-  function timeStr(ms) { return new Date(ms).toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" }).replace(":", ":"); }
+  function timeStr(ms) { return new Date(ms).toLocaleTimeString(LOC, { hour: "2-digit", minute: "2-digit" }).replace(":", ":"); }
   function findGame(id) { for (var i = 0; i < G.length; i++) if (G[i].id === id) return G[i]; return null; }
   function oddsOf(g, side) {
     var bk = side === "home" ? g.oh : g.oa;
@@ -566,7 +594,7 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
   function Phi(z) { var t = 1 / (1 + 0.2316419 * Math.abs(z)), d = 0.3989423 * Math.exp(-z * z / 2), q = d * t * (0.3193815 + t * (-0.3565638 + t * (1.781478 + t * (-1.821256 + t * 1.330274)))); return z > 0 ? 1 - q : q; }
   function PhiInv(p) { var lo = -8, hi = 8; for (var i = 0; i < 60; i++) { var m = (lo + hi) / 2; if (Phi(m) < p) lo = m; else hi = m; } return (lo + hi) / 2; }
   function clampOdd(o) { return Math.round(Math.min(15, Math.max(1.05, o)) * 100) / 100; }
-  function fmtLine(n) { return (n > 0 ? "+" : n < 0 ? "−" : "") + String(Math.abs(n)).replace(".", ","); }
+  function fmtLine(n) { return (n > 0 ? "+" : n < 0 ? "−" : "") + String(Math.abs(n)).replace(".", DEC); }
   // Ligne du bookmaker si publiée, sinon ligne estimée à partir des probabilités de victoire.
   function spreadInfo(g) {
     if (g.sp != null) return { line: g.sp, mu: -g.sp, real: true, oh: g.spo, oa: g.spa };
@@ -590,7 +618,7 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
     var pO = 1 - Phi((line - i.mu) / TOT_SD);
     return clampOdd(1 / ((ou === "over" ? pO : 1 - pO) * 1.05));
   }
-  var STAT = { pts: ["Points", "pts"], reb: ["Rebonds", "reb."], ast: ["Passes décisives", "passes"] };
+  var STAT = { pts: ["Points", "pts"], reb: [L("Rebonds", "Rebounds"), "reb."], ast: [L("Passes décisives", "Assists"), L("passes", "ast.")] };
   function statSd(stat, avg) { return stat === "pts" ? Math.max(3, 0.28 * avg) : stat === "reb" ? Math.max(1.5, 0.35 * avg) : Math.max(1.2, 0.38 * avg); }
   function propOdds(pr, ou) {
     var pOver = 1 - Phi((pr.line - pr.avg) / statSd(pr.stat, pr.avg));
@@ -630,7 +658,7 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
   function obBtn(attrs, label, odd, on) { return '<button class="ob' + (on ? " on" : "") + '" type="button" ' + attrs + '><span class="nm">' + label + '</span><span class="od">' + fmtOdd(odd) + "</span></button>"; }
   function mk(title, src, body) { return '<div class="mk"><div class="mkh"><b>' + title + "</b>" + (src ? "<small>" + src + "</small>" : "") + "</div>" + body + "</div>"; }
   function mlBlock(g) {
-    return mk("Vainqueur du match", g.oh != null && g.oa != null ? "Cotes bookmaker" : "Cotes estimées", '<div class="hrow">' + ["home", "away"].map(function (side) {
+    return mk(L("Vainqueur du match", "Match winner"), g.oh != null && g.oa != null ? L("Cotes bookmaker", "Bookmaker odds") : L("Cotes estimées", "Estimated odds"), '<div class="hrow">' + ["home", "away"].map(function (side) {
       var ab = side === "home" ? g.home : g.away, p = side === "home" ? g.ph : g.pa;
       return '<div class="cell">' + obBtn('data-g="' + g.id + '" data-side="' + side + '"', SHORT[ab], oddsOf(g, side), hasSel(g.id, side)) + (p != null ? '<div class="pbar"><i class="' + (p < 50 ? "low" : "") + '" style="width:' + Math.max(3, p) + '%"></i></div>' : "") + "</div>";
     }).join("") + "</div>");
@@ -644,33 +672,33 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
   function hcpBlock(g, offs) {
     var i = spreadInfo(g), h = "";
     offs.forEach(function (o) { h += hcpRow(g, i.line + o); });
-    h += '<p class="src" style="margin:0;font-size:.78rem;color:var(--muted)">Le chiffre s\'ajoute au score de l\'équipe choisie. ' + SHORT[g.home] + " " + fmtLine(i.line) + " : " + (i.line < 0 ? "les " + SHORT[g.home] + " doivent gagner de " + Math.ceil(-i.line) + " points ou plus." : "les " + SHORT[g.home] + " peuvent perdre de " + Math.floor(i.line) + " points maximum.") + "</p>";
-    return mk("Différence de points", i.real ? "Ligne bookmaker" : "Ligne estimée, remplacée dès que les bookmakers publient", h);
+    h += '<p class="src" style="margin:0;font-size:.78rem;color:var(--muted)">' + L("Le chiffre s'ajoute au score de l'équipe choisie. ", "The number is added to the chosen team's score. ") + SHORT[g.home] + " " + fmtLine(i.line) + ": " + (i.line < 0 ? L("les " + SHORT[g.home] + " doivent gagner de " + Math.ceil(-i.line) + " points ou plus.", "the " + SHORT[g.home] + " must win by " + Math.ceil(-i.line) + " points or more.") : L("les " + SHORT[g.home] + " peuvent perdre de " + Math.floor(i.line) + " points maximum.", "the " + SHORT[g.home] + " can lose by " + Math.floor(i.line) + " points at most.")) + "</p>";
+    return mk(L("Différence de points", "Point spread"), i.real ? L("Ligne bookmaker", "Bookmaker line") : L("Ligne estimée, remplacée dès que les bookmakers publient", "Estimated line, replaced as soon as bookmakers publish"), h);
   }
   function totRow(g, line) {
     return '<div class="hrow">' + ["over", "under"].map(function (ou) {
-      return obBtn('data-tot="' + g.id + '" data-ou="' + ou + '" data-line="' + line + '"', (ou === "over" ? "Plus de " : "Moins de ") + String(line).replace(".", ","), totOdds(g, ou, line), isSel({ gid: g.id, type: "tot", ou: ou, line: line }));
+      return obBtn('data-tot="' + g.id + '" data-ou="' + ou + '" data-line="' + line + '"', (ou === "over" ? L("Plus de ", "Over ") : L("Moins de ", "Under ")) + String(line).replace(".", DEC), totOdds(g, ou, line), isSel({ gid: g.id, type: "tot", ou: ou, line: line }));
     }).join("") + "</div>";
   }
   function totBlock(g, offs) {
     var i = totInfo(g), h = "";
     offs.forEach(function (o) { h += totRow(g, i.line + o); });
-    return mk("Total de points du match", i.real ? "Ligne bookmaker" : "Ligne estimée, remplacée dès que les bookmakers publient", h + '<p style="margin:0;font-size:.78rem;color:var(--muted)">Points des deux équipes additionnés, prolongations comprises.</p>');
+    return mk(L("Total de points du match", "Total match points"), i.real ? L("Ligne bookmaker", "Bookmaker line") : L("Ligne estimée, remplacée dès que les bookmakers publient", "Estimated line, replaced as soon as bookmakers publish"), h + '<p style="margin:0;font-size:.78rem;color:var(--muted)">' + L("Points des deux équipes additionnés, prolongations comprises.", "Both teams' points added together, overtime included.") + "</p>");
   }
   function propBlock(g, filter, title) {
     var pd = propData[g.id], h = "";
-    if (!pd || (pd.state === "loading" && !pd.list.length)) h = '<p class="imuted">Chargement des joueurs…</p>';
-    else if (pd.state === "err") h = '<p class="imuted">Joueurs indisponibles pour l\'instant. Vérifie ta connexion internet.</p>';
+    if (!pd || (pd.state === "loading" && !pd.list.length)) h = '<p class="imuted">' + L("Chargement des joueurs…", "Loading players…") + "</p>";
+    else if (pd.state === "err") h = '<p class="imuted">' + L("Joueurs indisponibles pour l'instant. Vérifie ta connexion internet.", "Players unavailable right now. Check your internet connection.") + "</p>";
     else {
       var list = pd.list.filter(filter);
-      if (!list.length) h = '<p class="imuted">Pas encore de joueurs proposés pour ce match.</p>';
+      if (!list.length) h = '<p class="imuted">' + L("Pas encore de joueurs proposés pour ce match.", "No player bets for this game yet.") + "</p>";
       list.forEach(function (pr) {
-        h += '<div class="prow"><div><b>' + esc(pr.name) + "</b> <small>" + SHORT[pr.team] + " · " + STAT[pr.stat][0] + " · moyenne " + String(pr.avg).replace(".", ",") + '</small></div><div class="hrow">' + ["over", "under"].map(function (ou) {
-          return obBtn('data-prop="' + g.id + '" data-key="' + esc(pr.key) + '" data-ou="' + ou + '"', (ou === "over" ? "Plus de " : "Moins de ") + String(pr.line).replace(".", ","), propOdds(pr, ou), isSel({ gid: g.id, type: "prop", key: pr.key, ou: ou }));
+        h += '<div class="prow"><div><b>' + esc(pr.name) + "</b> <small>" + SHORT[pr.team] + " · " + STAT[pr.stat][0] + L(" · moyenne ", " · average ") + String(pr.avg).replace(".", DEC) + '</small></div><div class="hrow">' + ["over", "under"].map(function (ou) {
+          return obBtn('data-prop="' + g.id + '" data-key="' + esc(pr.key) + '" data-ou="' + ou + '"', (ou === "over" ? L("Plus de ", "Over ") : L("Moins de ", "Under ")) + String(pr.line).replace(".", DEC), propOdds(pr, ou), isSel({ gid: g.id, type: "prop", key: pr.key, ou: ou }));
         }).join("") + "</div></div>";
       });
     }
-    return mk(title, "Cotes calculées d'après les moyennes de la saison", h);
+    return mk(title, L("Cotes calculées d'après les moyennes de la saison", "Odds based on season averages"), h);
   }
   function rankOf(ab) {
     var d = stand.data; if (!d) return "";
@@ -682,41 +710,41 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
     var F = info.data && info.gid === mv && info.data.form && info.data.form[ab];
     if (!F || !F.length) return '<span class="fdots"></span>';
     var ev = F.slice(0, 5).reverse();
-    return '<span class="fdots" title="5 derniers matchs">' + ev.map(function (e, i) { return '<i class="' + (e.res === "W" ? "w" : "l") + (i === ev.length - 1 ? " last" : "") + '"></i>'; }).join("") + "</span>";
+    return '<span class="fdots" title="' + L("5 derniers matchs", "Last 5 games") + '">' + ev.map(function (e, i) { return '<i class="' + (e.res === "W" ? "w" : "l") + (i === ev.length - 1 ? " last" : "") + '"></i>'; }).join("") + "</span>";
   }
   function whenStr(g) {
     var k = dayKey(g.t), today = dayKey(Date.now()), tom = dayKey(Date.now() + 864e5), hr = new Date(g.t).getHours();
-    if (k === today) return hr < 9 ? "Cette nuit" : "Aujourd'hui";
-    if (k === tom) return hr < 9 ? "Cette nuit" : "Demain";
-    return new Date(g.t).toLocaleDateString("fr-FR", { weekday: "short", day: "numeric", month: "short" });
+    if (k === today) return hr < 9 ? L("Cette nuit", "Tonight") : L("Aujourd'hui", "Today");
+    if (k === tom) return hr < 9 ? L("Cette nuit", "Tonight") : L("Demain", "Tomorrow");
+    return new Date(g.t).toLocaleDateString(LOC, { weekday: "short", day: "numeric", month: "short" });
   }
   function renderMatch() {
     var g = findGame(mv); if (!g) { mv = null; renderMain(); return; }
     var r = result(g), now = Date.now(), open = !r && g.t > now;
     $("#count").textContent = "";
-    var mid = r ? "<small>" + (r.real ? "Terminé" : "Simulé") + "</small><b>" + r.h + " - " + r.a + "</b>" : g.t <= now ? "<small>En cours</small><b>" + timeStr(g.t) + "</b>" : "<small>" + whenStr(g) + "</small><b>" + timeStr(g.t) + "</b>";
+    var mid = r ? "<small>" + (r.real ? L("Terminé", "Final") : L("Simulé", "Simulated")) + "</small><b>" + r.h + " - " + r.a + "</b>" : g.t <= now ? "<small>" + L("En cours", "Live") + "</small><b>" + timeStr(g.t) + "</b>" : "<small>" + whenStr(g) + "</small><b>" + timeStr(g.t) + "</b>";
     var rh = rankOf(g.home), ra = rankOf(g.away);
-    var h = '<div class="mp"><div class="mphead"><div class="mptop"><button class="mpback" type="button" id="mpback">&lsaquo; Matchs</button><span>Basketball · NBA</span></div>' +
+    var h = '<div class="mp"><div class="mphead"><div class="mptop"><button class="mpback" type="button" id="mpback">&lsaquo; ' + L("Matchs", "Games") + '</button><span>Basketball · NBA</span></div>' +
       '<div class="mpteams"><div class="mpteam h"><span class="fl2">' + esc(TEAMS[g.home]) + '</span><span class="sh2">' + esc(SHORT[g.home]) + "</span>" + crest(g.home) + '</div><div class="mpmid">' + mid + '</div><div class="mpteam">' + crest(g.away) + '<span class="fl2">' + esc(TEAMS[g.away]) + '</span><span class="sh2">' + esc(SHORT[g.away]) + "</span></div></div>" +
       '<div class="mpform"><span class="h">' + formDots(g.home) + (rh ? ' <span class="rk2">' + rh + "</span>" : "") + "</span><span></span><span class=\"a\">" + (ra ? '<span class="rk2">' + ra + "</span> " : "") + formDots(g.away) + "</span></div></div>";
-    var tabs = open ? [["top", "Le top"], ["points", "Points"], ["players", "Joueurs"], ["infos", "Infos"]] : [["infos", r && r.real ? "Stats du match" : "Infos"]];
+    var tabs = open ? [["top", L("Le top", "Top")], ["points", "Points"], ["players", L("Joueurs", "Players")], ["infos", "Info"]] : [["infos", r && r.real ? L("Stats du match", "Box score") : "Info"]];
     if (!tabs.some(function (x) { return x[0] === mtab; })) mtab = tabs[0][0];
-    h += '<div class="mptabs" role="group" aria-label="Rubriques">' + tabs.map(function (x) { return '<button type="button" data-mtab="' + x[0] + '" aria-pressed="' + (mtab === x[0]) + '">' + x[1] + "</button>"; }).join("") + "</div>";
+    h += '<div class="mptabs" role="group" aria-label="' + L("Rubriques", "Sections") + '">' + tabs.map(function (x) { return '<button type="button" data-mtab="' + x[0] + '" aria-pressed="' + (mtab === x[0]) + '">' + x[1] + "</button>"; }).join("") + "</div>";
     var body = "";
     if (mtab === "top") {
       body += mlBlock(g) + hcpBlock(g, [0]) + totBlock(g, [0]);
       var pd = propData[g.id], best = {};
       if (pd && pd.list) pd.list.forEach(function (x) { if (x.stat === "pts" && !best[x.team]) best[x.team] = x.key; });
-      body += propBlock(g, function (x) { return best[x.team] === x.key; }, "Meilleurs marqueurs");
+      body += propBlock(g, function (x) { return best[x.team] === x.key; }, L("Meilleurs marqueurs", "Top scorers"));
     } else if (mtab === "points") {
       body += hcpBlock(g, [-8, -4, 0, 4, 8]) + totBlock(g, [-10, -5, 0, 5, 10]);
     } else if (mtab === "players") {
       ["pts", "reb", "ast"].forEach(function (st) { body += propBlock(g, function (x) { return x.stat === st; }, STAT[st][0]); });
-      body += '<p class="imuted">Les blessés annoncés absents sont retirés. Si un joueur ne joue finalement pas, le pari est remboursé.</p>';
+      body += '<p class="imuted">' + L("Les blessés annoncés absents sont retirés. Si un joueur ne joue finalement pas, le pari est remboursé.", "Players ruled out are removed. If a player ends up not playing, the bet is refunded.") + "</p>";
     } else body += '<div class="mpinfo">' + infoHtml(g) + "</div>";
     var b = myBet(g.id);
-    if (b) body += '<div class="mybet">Ton pari : <b>' + fmtInt(b.stake) + "</b> · <b>" + (b.legs.length > 1 ? "Combiné ×" + b.legs.length : legText(b.legs[0])) + "</b> à " + fmtOdd(b.odds) + ' <span class="st ' + b.status + '">' + (b.status === "pending" ? "en cours" : b.status === "won" ? "gagné +" + fmtInt(b.payout) : b.status === "void" ? "remboursé" : "perdu") + "</span></div>";
-    if (!r && g.t <= now) body += '<p class="closed">Paris fermés : le match a commencé.</p>';
+    if (b) body += '<div class="mybet">' + L("Ton pari : ", "Your bet: ") + '<b>' + fmtInt(b.stake) + "</b> · <b>" + (b.legs.length > 1 ? L("Combiné ×", "Parlay ×") + b.legs.length : legText(b.legs[0])) + "</b> " + L("à", "at") + " " + fmtOdd(b.odds) + ' <span class="st ' + b.status + '">' + (b.status === "pending" ? L("en cours", "pending") : b.status === "won" ? L("gagné +", "won +") + fmtInt(b.payout) : b.status === "void" ? L("remboursé", "refunded") : L("perdu", "lost")) + "</span></div>";
+    if (!r && g.t <= now) body += '<p class="closed">' + L("Paris fermés : le match a commencé.", "Betting closed: the game has started.") + "</p>";
     $("#main").innerHTML = h + '<div class="mpbody">' + body + "</div></div>";
   }
   function openMatch(gid, sub) {
@@ -833,7 +861,7 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
     for (var i = 0; i < vg.length; i++) if (vg[i].t > now) return dayKey(vg[i].t);
     return ks[ks.length - 1];
   }
-  function dayLabel(ms) { return new Date(ms).toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" }); }
+  function dayLabel(ms) { return new Date(ms).toLocaleDateString(LOC, { weekday: "long", day: "numeric", month: "long" }); }
   function myBet(gid) {
     for (var i = S.bets.length - 1; i >= 0; i--) if (S.bets[i].legs.some(function (l) { return l.gid === gid; })) return S.bets[i];
     return null;
@@ -857,8 +885,8 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
   }
   function legText(l) {
     if (l.type === "hcp") return SHORT[l.team] + " " + fmtLine(l.line);
-    if (l.type === "tot") return "Total " + (l.ou === "over" ? "plus de " : "moins de ") + String(l.line).replace(".", ",") + " pts";
-    if (l.type === "prop") return esc(l.name) + " · " + (l.ou === "over" ? "plus de " : "moins de ") + String(l.line).replace(".", ",") + " " + STAT[l.stat][1] + (l.val != null && l.val !== "void" ? " (" + l.val + ")" : l.val === "void" ? " (n'a pas joué)" : "");
+    if (l.type === "tot") return "Total " + (l.ou === "over" ? L("plus de ", "over ") : L("moins de ", "under ")) + String(l.line).replace(".", DEC) + " pts";
+    if (l.type === "prop") return esc(l.name) + " · " + (l.ou === "over" ? L("plus de ", "over ") : L("moins de ", "under ")) + String(l.line).replace(".", DEC) + " " + STAT[l.stat][1] + (l.val != null && l.val !== "void" ? " (" + l.val + ")" : l.val === "void" ? L(" (n'a pas joué)", " (did not play)") : "");
     return SHORT[l.team];
   }
   function legOf(x) {
@@ -884,7 +912,7 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
     S.streak.last = today;
     var r = Math.min(S.streak.count, 5) * 15;
     S.balance += r; save();
-    noteMsg = "Connexion jour " + S.streak.count + " d'affilée : +" + r + " jetons.";
+    noteMsg = L("Connexion jour " + S.streak.count + " d'affilée : +" + r + " jetons.", "Day " + S.streak.count + " login streak: +" + r + " tokens.");
   }
   var LOAN = { give: 50, owe: 60, max: 20 };
   function borrow() {
@@ -909,8 +937,8 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
     $("#days").innerHTML = days().map(function (k) {
       var list = V().filter(function (g) { return dayKey(g.t) === k; });
       var open = list.filter(function (g) { return g.t > now; }).length;
-      var d = new Date(list[0].t).toLocaleDateString("fr-FR", { weekday: "short", day: "numeric", month: "short" });
-      return '<button class="dayb" type="button" data-day="' + k + '" aria-pressed="' + (k === curDay && !query) + '"><b>' + d + "</b><small>" + list.length + " matchs" + (open ? ", " + open + " ouverts" : "") + "</small></button>";
+      var d = new Date(list[0].t).toLocaleDateString(LOC, { weekday: "short", day: "numeric", month: "short" });
+      return '<button class="dayb" type="button" data-day="' + k + '" aria-pressed="' + (k === curDay && !query) + '"><b>' + d + "</b><small>" + list.length + L(" matchs", list.length > 1 ? " games" : " game") + (open ? ", " + open + L(" ouverts", " open") : "") + "</small></button>";
     }).join("");
   }
   function renderTabs() {
@@ -919,16 +947,16 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
 
   function matchHtml(g) {
     var now = Date.now(), r = result(g), locked = g.t <= now;
-    var tag = r ? '<span class="tag">' + (r.real ? "Terminé" : "Simulé") + "</span>" : (locked ? (now - g.t > 4 * 3600e3 ? '<span class="tag">Résultat en attente</span>' : '<span class="tag live">En cours</span>') : "");
+    var tag = r ? '<span class="tag">' + (r.real ? L("Terminé", "Final") : L("Simulé", "Simulated")) + "</span>" : (locked ? (now - g.t > 4 * 3600e3 ? '<span class="tag">' + L("Résultat en attente", "Awaiting result") + "</span>" : '<span class="tag live">' + L("En cours", "Live") + "</span>") : "");
     var kind = g.oh != null && g.oa != null ? "book" : g.ph != null ? "calc" : "prov";
-    var prov = r ? "" : '<span class="sp">' + (kind === "book" ? "Cotes bookmaker" + (g.oe ? " (1 cote reconstituée)" : "") : kind === "calc" ? "Cotes estimées · remplacées dès que les bookmakers publient" : "Cote provisoire · remplacée dès que les bookmakers publient") + "</span>";
+    var prov = r ? "" : '<span class="sp">' + (kind === "book" ? L("Cotes bookmaker", "Bookmaker odds") + (g.oe ? L(" (1 cote reconstituée)", " (1 odd rebuilt)") : "") : kind === "calc" ? L("Cotes estimées · remplacées dès que les bookmakers publient", "Estimated odds · replaced when bookmakers publish") : L("Cote provisoire · remplacée dès que les bookmakers publient", "Provisional odds · replaced when bookmakers publish")) + "</span>";
     var s = '<div class="match"><div class="mhead">NBA ' + tag + prov + "</div>";
     var mid, hw = "", aw = "";
     if (r) {
       mid = '<span class="final">' + r.h + " - " + r.a + "</span>";
       if (r.h > r.a) aw = " lost"; else hw = " lost";
     } else mid = '<span class="ko">' + timeStr(g.t) + "</span>";
-    s += '<div class="teams" data-info="' + g.id + '" title="Voir les infos du match"><span class="' + hw.trim() + '">' + SHORT[g.home] + "</span>" + crest(g.home) + mid + crest(g.away) + '<span class="' + aw.trim() + '">' + SHORT[g.away] + "</span></div>";
+    s += '<div class="teams" data-info="' + g.id + '" title="' + L("Voir les infos du match", "See game details") + '"><span class="' + hw.trim() + '">' + SHORT[g.home] + "</span>" + crest(g.home) + mid + crest(g.away) + '<span class="' + aw.trim() + '">' + SHORT[g.away] + "</span></div>";
     if (!r) {
       s += '<div class="btns">' + ["home", "away"].map(function (side) {
         var abbr = side === "home" ? g.home : g.away, p = side === "home" ? g.ph : g.pa;
@@ -939,10 +967,10 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
     }
     var b = myBet(g.id);
     if (b) {
-      var lbl = b.legs.length > 1 ? "Combiné ×" + b.legs.length : legText(b.legs[0]);
-      s += '<div class="mybet">Ton pari : <b>' + fmtInt(b.stake) + "</b> · <b>" + lbl + "</b> à " + fmtOdd(b.odds) + ' <span class="st ' + b.status + '">' + (b.status === "pending" ? "en cours" : b.status === "won" ? "gagné +" + fmtInt(b.payout) : b.status === "void" ? "remboursé" : "perdu") + "</span></div>";
+      var lbl = b.legs.length > 1 ? L("Combiné ×", "Parlay ×") + b.legs.length : legText(b.legs[0]);
+      s += '<div class="mybet">' + L("Ton pari : ", "Your bet: ") + '<b>' + fmtInt(b.stake) + "</b> · <b>" + lbl + "</b> " + L("à", "at") + " " + fmtOdd(b.odds) + ' <span class="st ' + b.status + '">' + (b.status === "pending" ? L("en cours", "pending") : b.status === "won" ? L("gagné +", "won +") + fmtInt(b.payout) : b.status === "void" ? L("remboursé", "refunded") : L("perdu", "lost")) + "</span></div>";
     }
-    if (locked && !r) s += '<p class="closed">' + (now - g.t > 4 * 3600e3 ? "Paris fermés" : "Paris fermés : le match a commencé") + "</p>";
+    if (locked && !r) s += '<p class="closed">' + (now - g.t > 4 * 3600e3 ? L("Paris fermés", "Betting closed") : L("Paris fermés : le match a commencé", "Betting closed: the game has started")) + "</p>";
     return s + "</div>";
   }
 
@@ -959,9 +987,9 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
         return (TEAMS[g.home] + " " + TEAMS[g.away] + " " + SHORT[g.home] + " " + SHORT[g.away] + " " + g.home + " " + g.away).toLowerCase().indexOf(q) >= 0;
       });
     } else list = V().filter(function (g) { return dayKey(g.t) === curDay; });
-    $("#count").textContent = list.length + " match" + (list.length > 1 ? "s" : "");
-    if (!V().some(function (g) { return g.t > now; })) out += '<p class="notice">Pas de nouveaux matchs chargés pour l\'instant. Vérifie ta connexion internet : le calendrier se met à jour tout seul. Tu peux toujours consulter le classement pour suivre les prochaines soirées.</p>';
-    if (!list.length) out += '<p class="empty">Aucun match pour cette recherche.</p>';
+    $("#count").textContent = list.length + L(" match", " game") + (list.length > 1 ? "s" : "");
+    if (!V().some(function (g) { return g.t > now; })) out += '<p class="notice">' + L("Pas de nouveaux matchs chargés pour l'instant. Vérifie ta connexion internet : le calendrier se met à jour tout seul. Tu peux toujours consulter le classement pour suivre les prochaines soirées.", "No new games loaded yet. Check your internet connection: the schedule updates on its own. You can still check the standings in the meantime.") + "</p>";
+    if (!list.length) out += '<p class="empty">' + L("Aucun match pour cette recherche.", "No games match this search.") + "</p>";
     var lastK = "";
     list.forEach(function (g) {
       var k = dayKey(g.t);
@@ -972,20 +1000,20 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
   }
 
   function renderBank() {
-    $("#count").textContent = S.loan ? "Dette : " + fmtInt(S.loan.owed) : "";
+    $("#count").textContent = S.loan ? L("Dette : ", "Debt: ") + fmtInt(S.loan.owed) : "";
     var next = Math.min(S.streak.count + 1, 5) * 15;
-    var out = '<div class="stats"><div class="stat"><small>Solde</small><b>' + fmtInt(S.balance) + '</b></div><div class="stat"><small>Dette</small><b class="' + (S.loan ? "neg" : "") + '">' + (S.loan ? fmtInt(S.loan.owed) : "0") + '</b></div><div class="stat"><small>Série</small><b>' + S.streak.count + " j</b></div></div>";
+    var out = '<div class="stats"><div class="stat"><small>' + L("Solde", "Balance") + '</small><b>' + fmtInt(S.balance) + '</b></div><div class="stat"><small>' + L("Dette", "Debt") + '</small><b class="' + (S.loan ? "neg" : "") + '">' + (S.loan ? fmtInt(S.loan.owed) : "0") + '</b></div><div class="stat"><small>' + L("Série", "Streak") + '</small><b>' + S.streak.count + L(" j", " d") + "</b></div></div>";
     if (!S.loan) {
       var can = S.balance < LOAN.max;
-      out += '<div class="bank"><h3>Emprunter à la banque</h3><p>Reçois ' + LOAN.give + " jetons maintenant et rends-en " + LOAN.owe + ". La banque prélève la moitié de chacun de tes gains jusqu'au remboursement. Un seul prêt à la fois, possible sous " + LOAN.max + ' jetons.</p><button class="btn-red" id="borrow" type="button"' + (can ? "" : " disabled") + ">Emprunter " + LOAN.give + "</button>" + (can ? "" : "<small>Tu as encore " + fmtInt(S.balance) + " jetons : reviens quand tu en as moins de " + LOAN.max + ".</small>") + "</div>";
+      out += '<div class="bank"><h3>' + L("Emprunter à la banque", "Borrow from the bank") + "</h3><p>" + L("Reçois " + LOAN.give + " jetons maintenant et rends-en " + LOAN.owe + ". La banque prélève la moitié de chacun de tes gains jusqu'au remboursement. Un seul prêt à la fois, possible sous " + LOAN.max + " jetons.", "Get " + LOAN.give + " tokens now and pay back " + LOAN.owe + ". The bank takes half of each of your winnings until it's repaid. One loan at a time, available below " + LOAN.max + " tokens.") + '</p><button class="btn-red" id="borrow" type="button"' + (can ? "" : " disabled") + ">" + L("Emprunter ", "Borrow ") + LOAN.give + "</button>" + (can ? "" : "<small>" + L("Tu as encore " + fmtInt(S.balance) + " jetons : reviens quand tu en as moins de " + LOAN.max + ".", "You still have " + fmtInt(S.balance) + " tokens: come back when you have fewer than " + LOAN.max + ".") + "</small>") + "</div>";
     } else {
       var pct = Math.max(0, Math.min(100, Math.round(100 * (LOAN.owe - S.loan.owed) / LOAN.owe)));
       var step = Math.min(20, S.loan.owed);
-      out += '<div class="bank"><h3>Prêt en cours</h3><p>Il te reste <b>' + fmtInt(S.loan.owed) + "</b> jetons à rembourser. La moitié de chaque gain y passe automatiquement.</p>" +
+      out += '<div class="bank"><h3>' + L("Prêt en cours", "Current loan") + "</h3><p>" + L("Il te reste <b>" + fmtInt(S.loan.owed) + "</b> jetons à rembourser. La moitié de chaque gain y passe automatiquement.", "You still owe <b>" + fmtInt(S.loan.owed) + "</b> tokens. Half of each win goes to it automatically.") + "</p>" +
         '<div class="pbar" aria-hidden="true"><i style="width:' + pct + '%"></i></div>' +
-        '<div class="row2"><button class="link" type="button" id="repay100"' + (S.balance < step ? " disabled" : "") + ">Rembourser " + step + '</button><button class="link" type="button" id="repayall"' + (S.balance < S.loan.owed ? " disabled" : "") + ">Tout rembourser (" + fmtInt(S.loan.owed) + ")</button></div></div>";
+        '<div class="row2"><button class="link" type="button" id="repay100"' + (S.balance < step ? " disabled" : "") + ">" + L("Rembourser ", "Repay ") + step + '</button><button class="link" type="button" id="repayall"' + (S.balance < S.loan.owed ? " disabled" : "") + ">" + L("Tout rembourser (", "Repay all (") + fmtInt(S.loan.owed) + ")</button></div></div>";
     }
-    out += '<div class="bank"><h3>Connexion quotidienne</h3><p>15 jetons par jour de connexion d\'affilée, jusqu\'à 75. Prochaine récompense demain : +' + next + ". Si tu rates un jour, la série repart à 1.</p></div>";
+    out += '<div class="bank"><h3>' + L("Connexion quotidienne", "Daily login") + "</h3><p>" + L("15 jetons par jour de connexion d'affilée, jusqu'à 75. Prochaine récompense demain : +" + next + ". Si tu rates un jour, la série repart à 1.", "15 tokens per consecutive day you log in, up to 75. Next reward tomorrow: +" + next + ". Miss a day and the streak goes back to 1.") + "</p></div>";
     $("#main").innerHTML = out;
   }
 
@@ -994,27 +1022,27 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
     var won = settled.filter(function (b) { return b.status === "won"; }).length;
     var net = settled.reduce(function (a, b) { return a + (b.payout - b.stake); }, 0);
     var rate = settled.length ? Math.round(100 * won / settled.length) + " %" : "–";
-    $("#count").textContent = S.bets.length + " pari" + (S.bets.length > 1 ? "s" : "");
-    var out = '<div class="stats"><div class="stat"><small>Paris</small><b>' + S.bets.length + '</b></div><div class="stat"><small>Réussite</small><b>' + rate + '</b></div><div class="stat"><small>Bénéfice net</small><b class="' + (net > 0 ? "pos" : net < 0 ? "neg" : "") + '">' + (net > 0 ? "+" : "") + fmtInt(net) + "</b></div></div>";
-    var FL = [["all", "Tous"], ["pending", "En cours"], ["won", "Gagnés"], ["lost", "Perdus"]];
-    out += '<div class="filters" role="group" aria-label="Filtrer les paris">' + FL.map(function (f) {
+    $("#count").textContent = S.bets.length + L(" pari", " bet") + (S.bets.length > 1 ? "s" : "");
+    var out = '<div class="stats"><div class="stat"><small>' + L("Paris", "Bets") + '</small><b>' + S.bets.length + '</b></div><div class="stat"><small>' + L("Réussite", "Win rate") + '</small><b>' + rate + '</b></div><div class="stat"><small>' + L("Bénéfice net", "Net profit") + '</small><b class="' + (net > 0 ? "pos" : net < 0 ? "neg" : "") + '">' + (net > 0 ? "+" : "") + fmtInt(net) + "</b></div></div>";
+    var FL = [["all", L("Tous", "All")], ["pending", L("En cours", "Pending")], ["won", L("Gagnés", "Won")], ["lost", L("Perdus", "Lost")]];
+    out += '<div class="filters" role="group" aria-label="' + L("Filtrer les paris", "Filter bets") + '">' + FL.map(function (f) {
       var n = f[0] === "all" ? S.bets.length : S.bets.filter(function (b) { return b.status === f[0]; }).length;
       return '<button class="chipf" type="button" data-filter="' + f[0] + '" aria-pressed="' + (betFilter === f[0]) + '">' + f[1] + " <small>" + n + "</small></button>";
     }).join("") + "</div>";
     var shown = S.bets.filter(function (b) { return betFilter === "all" || b.status === betFilter; });
-    if (!shown.length) out += '<p class="empty">' + (!S.bets.length ? "Aucun pari pour l'instant. Ça se voit que tu as peur." : "Aucun pari dans cette catégorie.") + "</p>";
+    if (!shown.length) out += '<p class="empty">' + (!S.bets.length ? L("Aucun pari pour l'instant. Ça se voit que tu as peur.", "No bets yet. Scared, are we?") : L("Aucun pari dans cette catégorie.", "No bets in this category.")) + "</p>";
     out += shown.slice().reverse().map(function (b) {
-      var st = b.status === "pending" ? "en cours" : b.status === "won" ? "gagné +" + fmtInt(b.payout) : b.status === "void" ? "remboursé" : "perdu −" + fmtInt(b.stake);
+      var st = b.status === "pending" ? L("en cours", "pending") : b.status === "won" ? L("gagné +", "won +") + fmtInt(b.payout) : b.status === "void" ? L("remboursé", "refunded") : L("perdu −", "lost −") + fmtInt(b.stake);
       var legs = b.legs.map(function (l) {
         var g = findGame(l.gid), s2 = legState(l);
-        return "<small>" + (g ? SHORT[g.home] + " - " + SHORT[g.away] : "") + " → <b>" + legText(l) + "</b> (" + fmtOdd(l.odds) + ') <span class="st ' + s2 + '">' + (s2 === "pending" ? "" : s2 === "won" ? "✓" : s2 === "void" ? "remboursé" : "✗") + "</span></small>";
+        return "<small>" + (g ? SHORT[g.home] + " - " + SHORT[g.away] : "") + " → <b>" + legText(l) + "</b> (" + fmtOdd(l.odds) + ') <span class="st ' + s2 + '">' + (s2 === "pending" ? "" : s2 === "won" ? "✓" : s2 === "void" ? L("remboursé", "refunded") : "✗") + "</span></small>";
       }).join("");
-      var title = b.legs.length > 1 ? "Combiné ×" + b.legs.length : legText(b.legs[0]);
-      return '<div class="bet"><div class="t2"><span><b>' + title + "</b> à " + fmtOdd(b.odds) + " · " + fmtInt(b.stake) + ' jetons</span><span class="st ' + b.status + '">' + st + "</span></div>" + legs + (b.repaid ? "<small>dont " + fmtInt(b.repaid) + " remboursés à la banque</small>" : "") + "</div>";
+      var title = b.legs.length > 1 ? L("Combiné ×", "Parlay ×") + b.legs.length : legText(b.legs[0]);
+      return '<div class="bet"><div class="t2"><span><b>' + title + "</b> " + L("à", "at") + " " + fmtOdd(b.odds) + " · " + fmtInt(b.stake) + L(" jetons", " tokens") + '</span><span class="st ' + b.status + '">' + st + "</span></div>" + legs + (b.repaid ? "<small>" + L("dont " + fmtInt(b.repaid) + " remboursés à la banque", "incl. " + fmtInt(b.repaid) + " paid back to the bank") + "</small>" : "") + "</div>";
     }).join("");
     var pend = S.bets.filter(function (b) { return b.status === "pending"; }).length;
-    if (pend) out += '<div class="resetrow"><button class="link" type="button" id="reset" disabled>Repartir à ' + START + ' jetons</button><p class="imuted" style="margin-top:8px">Impossible tant que ' + (pend > 1 ? "tes " + pend + " paris sont en cours" : "ton pari est en cours") + ". Attends la fin " + (pend > 1 ? "des matchs" : "du match") + ".</p></div>";
-    else out += '<div class="resetrow"><button class="link" type="button" id="reset">' + (resetArmed ? "Sûr ? Clique encore pour tout effacer" : "Repartir à " + START + " jetons") + "</button></div>";
+    if (pend) out += '<div class="resetrow"><button class="link" type="button" id="reset" disabled>' + L("Repartir à " + START + " jetons", "Restart with " + START + " tokens") + '</button><p class="imuted" style="margin-top:8px">' + L("Impossible tant que " + (pend > 1 ? "tes " + pend + " paris sont en cours" : "ton pari est en cours") + ". Attends la fin " + (pend > 1 ? "des matchs" : "du match") + ".", "Not possible while " + (pend > 1 ? "your " + pend + " bets are pending" : "your bet is pending") + ". Wait until " + (pend > 1 ? "the games are" : "the game is") + " over.") + "</p></div>";
+    else out += '<div class="resetrow"><button class="link" type="button" id="reset">' + (resetArmed ? L("Sûr ? Clique encore pour tout effacer", "Sure? Click again to erase everything") : L("Repartir à " + START + " jetons", "Restart with " + START + " tokens")) + "</button></div>";
     $("#main").innerHTML = out;
   }
 
@@ -1023,48 +1051,48 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
     var j = $("#jump");
     if (!sel.length) { j.hidden = true; return; }
     j.hidden = false;
-    j.textContent = "Mon ticket · " + sel.length + (sel.length > 1 ? " sélections" : " sélection") + " · cote " + fmtOdd(totalOdds());
+    j.textContent = L("Mon ticket · ", "My slip · ") + sel.length + (sel.length > 1 ? L(" sélections", " picks") : L(" sélection", " pick")) + L(" · cote ", " · odds ") + fmtOdd(totalOdds());
   }
   function renderSlip() {
     var el = $("#slip");
     updateJump();
     if (!sel.length) {
-      el.innerHTML = '<div class="slip-h"><span>0 sélection</span></div><div class="slip-b blank">' + BALL + "<b>Choisis ton équipe</b><p>Clique sur plusieurs cotes pour monter un combiné.</p></div>" +
-        '<div class="slip-f"><div class="gp"><span>Gains possibles</span><b>0 jeton</b></div><button class="parier" type="button" disabled>Parier</button></div>';
+      el.innerHTML = '<div class="slip-h"><span>' + L("0 sélection", "0 picks") + '</span></div><div class="slip-b blank">' + BALL + "<b>" + L("Choisis ton équipe", "Pick your team") + "</b><p>" + L("Clique sur plusieurs cotes pour monter un combiné.", "Click several odds to build a parlay.") + "</p></div>" +
+        '<div class="slip-f"><div class="gp"><span>' + L("Gains possibles", "Potential win") + "</span><b>" + L("0 jeton", "0 tokens") + '</b></div><button class="parier" type="button" disabled>' + L("Parier", "Bet") + "</button></div>";
       return;
     }
     var combo = sel.length > 1;
     var legs = sel.map(function (x) {
       var g = findGame(x.gid), l = legOf(x), title = !x.type ? TEAMS[l.team] : x.type === "hcp" ? TEAMS[l.team] + " " + fmtLine(x.line) : legText(l);
-      var kind = x.type === "hcp" ? "Handicap · " : x.type === "prop" ? "Joueur · " : x.type === "tot" ? "Total de points · " : "";
-      return '<div class="sel"><span><b>' + title + "</b><small>" + kind + SHORT[g.home] + " - " + SHORT[g.away] + " · " + timeStr(g.t) + '</small></span><span class="od">' + fmtOdd(selOdds(x)) + '</span><button class="x" type="button" data-rm="' + g.id + '" aria-label="Retirer">×</button></div>';
+      var kind = x.type === "hcp" ? L("Handicap · ", "Spread · ") : x.type === "prop" ? L("Joueur · ", "Player · ") : x.type === "tot" ? L("Total de points · ", "Total points · ") : "";
+      return '<div class="sel"><span><b>' + title + "</b><small>" + kind + SHORT[g.home] + " - " + SHORT[g.away] + " · " + timeStr(g.t) + '</small></span><span class="od">' + fmtOdd(selOdds(x)) + '</span><button class="x" type="button" data-rm="' + g.id + '" aria-label="' + L("Retirer", "Remove") + '">×</button></div>';
     }).join("");
     var calc = "";
     if (combo) {
       var parts = sel.map(function (x) { return fmtOdd(selOdds(x)); }).join(" × ");
-      calc = '<div class="combo"><div class="kv"><span>Cote du combiné</span><b class="big">' + fmtOdd(totalOdds()) + "</b></div><small>" + parts + "</small></div>";
+      calc = '<div class="combo"><div class="kv"><span>' + L("Cote du combiné", "Parlay odds") + '</span><b class="big">' + fmtOdd(totalOdds()) + "</b></div><small>" + parts + "</small></div>";
     }
     var chips = [10, 20, 50, 100].map(function (v) {
       return '<button class="chip" type="button" data-stake="' + v + '" aria-pressed="' + (stake === v) + '">' + v + "</button>";
-    }).join("") + '<button class="chip" type="button" data-stake="all" aria-pressed="' + (stake === S.balance) + '">Tout</button>';
-    el.innerHTML = '<div class="slip-h"><span>' + (combo ? "Combiné · " + sel.length + " sélections" : "1 sélection") + '</span><button class="link small" type="button" id="cancel">Vider</button></div>' +
+    }).join("") + '<button class="chip" type="button" data-stake="all" aria-pressed="' + (stake === S.balance) + '">' + L("Tout", "All in") + "</button>";
+    el.innerHTML = '<div class="slip-h"><span>' + (combo ? L("Combiné · " + sel.length + " sélections", "Parlay · " + sel.length + " picks") : L("1 sélection", "1 pick")) + '</span><button class="link small" type="button" id="cancel">' + L("Vider", "Clear") + "</button></div>" +
       '<div class="slip-b">' + legs + calc +
       '<div class="chips">' + chips + "</div>" +
-      '<label class="sr" for="stake">Mise en jetons</label><input id="stake" type="number" min="10" step="10" inputmode="numeric" value="' + stake + '">' +
+      '<label class="sr" for="stake">' + L("Mise en jetons", "Stake in tokens") + '</label><input id="stake" type="number" min="10" step="10" inputmode="numeric" value="' + stake + '">' +
       '<p class="err" id="err" role="alert"></p></div>' +
-      '<div class="slip-f"><div class="gp"><span>Gains possibles</span><b id="gain">0</b></div><button class="parier" type="button" id="place">Parier</button></div>';
+      '<div class="slip-f"><div class="gp"><span>' + L("Gains possibles", "Potential win") + '</span><b id="gain">0</b></div><button class="parier" type="button" id="place">' + L("Parier", "Bet") + "</button></div>";
     if (oddsNote) { $("#err").textContent = oddsNote; oddsNote = ""; }
     updateGain();
   }
   function updateGain() {
     var el = $("#gain"); if (!el || !sel.length) return;
-    el.textContent = fmtInt((stake || 0) * totalOdds()) + " jetons";
+    el.textContent = fmtInt((stake || 0) * totalOdds()) + L(" jetons", " tokens");
     $("#place").disabled = !(stake >= 10);
   }
 
   function renderSync() {
     var u = new Date(feedMeta.updated);
-    $("#sync").textContent = "Calendrier sur 5 jours · cotes : " + feedMeta.source + " · mis à jour le " + u.toLocaleDateString("fr-FR", { day: "numeric", month: "short" }) + " à " + timeStr(u.getTime()) + (feedMeta.live ? " · synchronisé en direct" : " · version intégrée");
+    $("#sync").textContent = L("Calendrier sur 5 jours · cotes : ", "5-day schedule · odds: ") + feedMeta.source + L(" · mis à jour le ", " · updated ") + u.toLocaleDateString(LOC, { day: "numeric", month: "short" }) + L(" à ", " at ") + timeStr(u.getTime()) + (feedMeta.live ? L(" · synchronisé en direct", " · live sync") : L(" · version intégrée", " · built-in data"));
   }
   function snapOdds() {
     var o = {};
@@ -1082,7 +1110,7 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
       });
     });
     sel = sel.filter(function (x) { return findGame(x.gid); });
-    if (sel.some(function (x) { return !x.type && changed[x.gid + (x.side === "home" ? "h" : "a")]; })) oddsNote = "Les cotes de ton ticket ont changé. Le gain possible est recalculé.";
+    if (sel.some(function (x) { return !x.type && changed[x.gid + (x.side === "home" ? "h" : "a")]; })) oddsNote = L("Les cotes de ton ticket ont changé. Le gain possible est recalculé.", "The odds on your slip changed. Your potential win has been recalculated.");
     if (updated) feedMeta.updated = updated;
     if (source) feedMeta.source = source;
     feedMeta.live = true;
@@ -1104,7 +1132,7 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
     if (days().indexOf(curDay) < 0) curDay = defaultDay();
     var n = sel.length, now = Date.now();
     sel = sel.filter(function (x) { return findGame(x.gid).t > now; });
-    if (n !== sel.length) { noteMsg = "Un match de ton ticket a commencé : il en a été retiré, car les paris sont fermés une fois le match lancé."; renderSlip(); }
+    if (n !== sel.length) { noteMsg = L("Un match de ton ticket a commencé : il en a été retiré, car les paris sont fermés une fois le match lancé.", "A game on your slip has started: it was removed, because betting closes once a game begins."); renderSlip(); }
     settle(); resolveProps();
     renderWallet(); renderDays(); renderTabs(); renderMain();
     var nt = $("#note"); nt.hidden = !noteMsg; nt.textContent = noteMsg;
@@ -1148,9 +1176,9 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
       var err = $("#err");
       if (!sel.length) return;
       var v = parseInt($("#stake").value, 10), now = Date.now();
-      if (!(v >= 10)) { err.textContent = "Mise minimale : 10 jetons."; return; }
-      if (v > S.balance) { err.textContent = "Tu n'as que " + fmtInt(S.balance) + " jetons."; return; }
-      for (var i = 0; i < sel.length; i++) if (findGame(sel[i].gid).t <= now) { err.textContent = "Un match a commencé, retire-le du ticket."; return; }
+      if (!(v >= 10)) { err.textContent = L("Mise minimale : 10 jetons.", "Minimum stake: 10 tokens."); return; }
+      if (v > S.balance) { err.textContent = L("Tu n'as que " + fmtInt(S.balance) + " jetons.", "You only have " + fmtInt(S.balance) + " tokens."); return; }
+      for (var i = 0; i < sel.length; i++) if (findGame(sel[i].gid).t <= now) { err.textContent = L("Un match a commencé, retire-le du ticket.", "A game has started, remove it from your slip."); return; }
       var legs = sel.map(legOf);
       S.balance -= v;
       S.bets.push({ id: S.seq++, legs: legs, stake: v, odds: totalOdds(), status: "pending", payout: 0, at: now });
@@ -1185,23 +1213,23 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
     personal: "raison personnelle", wrist: "poignet", quad: "quadriceps", quadriceps: "quadriceps", adductor: "adducteur", neck: "cou",
     shin: "tibia", rest: "repos", thumb: "pouce", eye: "œil", abdomen: "abdomen", ribs: "côtes", "not injury related": "hors blessure"
   };
-  function partFr(p) { p = String(p || "").toLowerCase().trim(); return p ? (PART[p] || p) : "non précisé"; }
+  function partFr(p) { p = String(p || "").toLowerCase().trim(); if (EN) return p ? p.charAt(0).toUpperCase() + p.slice(1) : "Not specified"; return p ? (PART[p] || p) : "non précisé"; }
   function statusFr(s) {
     var k = String(s || "").toLowerCase();
-    if (k === "out" || k.indexOf("injured reserve") >= 0) return ["Absent", "out"];
-    if (k.indexOf("day") >= 0 || k.indexOf("questionable") >= 0) return ["Incertain", "dtd"];
-    if (k.indexOf("doubtful") >= 0) return ["Douteux", "out"];
+    if (k === "out" || k.indexOf("injured reserve") >= 0) return [L("Absent", "Out"), "out"];
+    if (k.indexOf("day") >= 0 || k.indexOf("questionable") >= 0) return [L("Incertain", "Questionable"), "dtd"];
+    if (k.indexOf("doubtful") >= 0) return [L("Douteux", "Doubtful"), "out"];
     if (k.indexOf("probable") >= 0) return ["Probable", "ok"];
-    if (k.indexOf("suspen") >= 0) return ["Suspendu", "out"];
+    if (k.indexOf("suspen") >= 0) return [L("Suspendu", "Suspended"), "out"];
     return [s || "?", "dtd"];
   }
   function retFr(d) {
     if (!d) return "";
     var t = new Date(d.length === 10 ? d + "T12:00:00Z" : d);
     if (isNaN(t)) return "";
-    if (t.getTime() - Date.now() > 180 * 864e5) return "fin de saison";
+    if (t.getTime() - Date.now() > 180 * 864e5) return L("fin de saison", "out for the season");
     if (t.getTime() < Date.now() - 864e5) return "";
-    return "retour estimé " + t.toLocaleDateString("fr-FR", { day: "numeric", month: "short" });
+    return L("retour estimé ", "expected back ") + t.toLocaleDateString(LOC, { day: "numeric", month: "short" });
   }
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
 
@@ -1295,15 +1323,15 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
     if (!g) return;
     loadInfo(g, true).then(function (d) { if (info.gid !== gid) return; info.data = d; info.state = "ok"; renderInfo(); }).catch(function () {});
   }, HOUR);
-  function updStr() { return info.data && info.data.at ? " Mis à jour à " + new Date(info.data.at).toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" }) + ", actualisé toutes les heures." : ""; }
+  function updStr() { return info.data && info.data.at ? L(" Mis à jour à ", " Updated at ") + new Date(info.data.at).toLocaleTimeString(LOC, { hour: "2-digit", minute: "2-digit" }) + L(", actualisé toutes les heures.", ", refreshed every hour.") : ""; }
   function closeInfo() { mv = null; $("#ov").hidden = true; document.body.style.overflow = ""; renderMain(); }
 
   function injList(ab) {
     var live = info.data && info.data.hasInj;
     var list = live ? (info.data.inj[ab] || []) : [];
     var h = '<div class="iteam"><div class="ith">' + crest(ab) + "<b>" + esc(TEAMS[ab]) + "</b></div>";
-    if (!live) return h + '<p class="imuted">' + (info.state === "loading" ? "Chargement…" : "Disponible quand tu es connecté à internet.") + "</p></div>";
-    if (!list.length) return h + '<p class="imuted">Aucun blessé signalé.</p></div>';
+    if (!live) return h + '<p class="imuted">' + (info.state === "loading" ? L("Chargement…", "Loading…") : L("Disponible quand tu es connecté à internet.", "Available when you're online.")) + "</p></div>";
+    if (!list.length) return h + '<p class="imuted">' + L("Aucun blessé signalé.", "No injuries reported.") + "</p></div>";
     list.slice().sort(function (x, y) { return statusFr(x[3])[1] === "out" ? -1 : statusFr(y[3])[1] === "out" ? 1 : 0; }).forEach(function (p) {
       var s = statusFr(p[3]), ret = retFr(p[2]);
       h += '<div class="irow"><div><b>' + esc(p[0]) + "</b>" + (p[1] ? ' <span class="ipos">' + esc(p[1]) + "</span>" : "") +
@@ -1311,11 +1339,11 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
     });
     return h + "</div>";
   }
-  var CAT = { points: "Points", rebounds: "Rebonds", assists: "Passes", pointsPerGame: "Points / match", reboundsPerGame: "Rebonds / match", assistsPerGame: "Passes / match", rating: "Évaluation", steals: "Interceptions", blocks: "Contres" };
+  var CAT = EN ? { points: "Points", rebounds: "Rebounds", assists: "Assists", pointsPerGame: "Points per game", reboundsPerGame: "Rebounds per game", assistsPerGame: "Assists per game", rating: "Rating", steals: "Steals", blocks: "Blocks" } : { points: "Points", rebounds: "Rebonds", assists: "Passes", pointsPerGame: "Points / match", reboundsPerGame: "Rebonds / match", assistsPerGame: "Passes / match", rating: "Évaluation", steals: "Interceptions", blocks: "Contres" };
   function leadList(ab, fin) {
     var L = info.data && info.data.lead && info.data.lead[ab];
     var h = '<div class="iteam"><div class="ith">' + crest(ab) + "<b>" + esc(TEAMS[ab]) + "</b></div>";
-    if (!L || !L.length) return h + '<p class="imuted">Pas encore de statistiques.</p></div>';
+    if (!L || !L.length) return h + '<p class="imuted">' + L("Pas encore de statistiques.", "No stats yet.") + "</p></div>";
     L.forEach(function (c) {
       h += '<div class="irow"><div><small>' + esc(CAT[c.cat] || c.label) + "</small><b>" + esc(c.who) + '</b></div><span class="ival">' + esc(c.val) + "</span></div>";
     });
@@ -1324,46 +1352,46 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
   function boxTable(ab) {
     var rows = info.data && info.data.box && info.data.box[ab];
     var h = '<div class="iteam"><div class="ith">' + crest(ab) + "<b>" + esc(TEAMS[ab]) + "</b></div>";
-    if (!rows) return h + '<p class="imuted">Feuille de match pas encore disponible.</p></div>';
-    h += '<div class="iscroll"><table class="ibox"><thead><tr><th>Joueur</th><th>Min</th><th>Pts</th><th>Reb</th><th>Pas</th><th>Tirs</th><th>3 pts</th><th>Int</th><th>Ctr</th><th>+/-</th></tr></thead><tbody>';
+    if (!rows) return h + '<p class="imuted">' + L("Feuille de match pas encore disponible.", "Box score not available yet.") + "</p></div>";
+    h += '<div class="iscroll"><table class="ibox"><thead><tr><th>' + L("Joueur", "Player") + "</th><th>Min</th><th>Pts</th><th>Reb</th><th>" + L("Pas", "Ast") + "</th><th>" + L("Tirs", "FG") + "</th><th>" + L("3 pts", "3PT") + "</th><th>" + L("Int", "Stl") + "</th><th>" + L("Ctr", "Blk") + "</th><th>+/-</th></tr></thead><tbody>";
     rows.forEach(function (r) {
-      h += "<tr><td>" + esc(r.n) + (r.st ? ' <span class="ipos">tit.</span>' : "") + "</td><td>" + esc(r.min) + "</td><td><b>" + esc(r.pts) + "</b></td><td>" + esc(r.reb) + "</td><td>" + esc(r.ast) + "</td><td>" + esc(r.fg) + "</td><td>" + esc(r.tp) + "</td><td>" + esc(r.stl) + "</td><td>" + esc(r.blk) + "</td><td>" + esc(r.pm) + "</td></tr>";
+      h += "<tr><td>" + esc(r.n) + (r.st ? ' <span class="ipos">' + L("tit.", "starter") + '</span>' : "") + "</td><td>" + esc(r.min) + "</td><td><b>" + esc(r.pts) + "</b></td><td>" + esc(r.reb) + "</td><td>" + esc(r.ast) + "</td><td>" + esc(r.fg) + "</td><td>" + esc(r.tp) + "</td><td>" + esc(r.stl) + "</td><td>" + esc(r.blk) + "</td><td>" + esc(r.pm) + "</td></tr>";
     });
     return h + "</tbody></table></div></div>";
   }
   function formList(ab) {
     var F = info.data && info.data.form && info.data.form[ab];
     var h = '<div class="iteam"><div class="ith">' + crest(ab) + "<b>" + esc(TEAMS[ab]) + "</b>";
-    if (!F || !F.length) return h + '</div><p class="imuted">Pas de matchs récents.</p></div>';
+    if (!F || !F.length) return h + '</div><p class="imuted">' + L("Pas de matchs récents.", "No recent games.") + "</p></div>";
     var w = F.filter(function (e) { return e.res === "W"; }).length;
-    h += '<span class="ival">' + w + " V - " + (F.length - w) + " D</span></div>";
+    h += '<span class="ival">' + w + L(" V - ", "W - ") + (F.length - w) + L(" D", "L") + "</span></div>";
     F.forEach(function (e) {
-      var d = e.d ? new Date(e.d).toLocaleDateString("fr-FR", { day: "numeric", month: "short" }) : "";
-      h += '<div class="irow"><div><b>' + (e.at === "@" ? "à " : "vs ") + esc(TEAMS[e.opp] || e.opp) + "</b><small>" + esc(d) + '</small></div><span class="ival"><i class="ires ' + (e.res === "W" ? "w" : "l") + '">' + (e.res === "W" ? "V" : "D") + "</i> " + esc(e.sc) + "</span></div>";
+      var d = e.d ? new Date(e.d).toLocaleDateString(LOC, { day: "numeric", month: "short" }) : "";
+      h += '<div class="irow"><div><b>' + (e.at === "@" ? L("à ", "at ") : "vs ") + esc(TEAMS[e.opp] || e.opp) + "</b><small>" + esc(d) + '</small></div><span class="ival"><i class="ires ' + (e.res === "W" ? "w" : "l") + '">' + (e.res === "W" ? L("V", "W") : L("D", "L")) + "</i> " + esc(e.sc) + "</span></div>";
     });
     return h + "</div>";
   }
   function renderInfo() { if (info.gid && mv === info.gid && tab === "games") renderMain(); }
   function infoHtml(g) {
     var r = result(g), fin = !!(r && r.real), head = "";
-    var tabs = [["inj", "Blessés"], [fin ? "box" : "lead", fin ? "Stats du match" : "Meilleurs joueurs"], ["form", "Forme"]];
+    var tabs = [["inj", L("Blessés", "Injuries")], [fin ? "box" : "lead", fin ? L("Stats du match", "Box score") : L("Meilleurs joueurs", "Top players")], ["form", L("Forme", "Form")]];
     if (info.tab === "box" && !fin) info.tab = "lead";
     if (info.tab === "lead" && fin) info.tab = "box";
     var t = '<div class="itabs">' + tabs.map(function (x) { return '<button type="button" data-itab="' + x[0] + '" aria-pressed="' + (info.tab === x[0]) + '">' + x[1] + "</button>"; }).join("") + "</div>";
     var body = "";
-    if (info.state === "loading") body += '<p class="iload">Chargement des infos en direct…</p>';
+    if (info.state === "loading") body += '<p class="iload">' + L("Chargement des infos en direct…", "Loading live info…") + "</p>";
     if (info.tab === "inj") {
       body += injList(g.home) + injList(g.away);
       var liveInj = info.state === "ok" && info.data.hasInj;
-      if (liveInj) body += '<p class="isrc">Infos en direct (ESPN).' + updStr() + "</p>";
-      else if (info.state === "err") body += '<p class="isrc">Impossible de charger les infos pour l\'instant. Vérifie ta connexion.</p>';
+      if (liveInj) body += '<p class="isrc">' + L("Infos en direct (ESPN).", "Live info (ESPN).") + updStr() + "</p>";
+      else if (info.state === "err") body += '<p class="isrc">' + L("Impossible de charger les infos pour l'instant. Vérifie ta connexion.", "Couldn't load the info right now. Check your connection.") + "</p>";
     } else if (info.state === "err") {
-      body += '<p class="imuted">Impossible de charger les stats en direct. Vérifie ta connexion internet et réessaie.</p><button class="link" type="button" data-info="' + g.id + '">Réessayer</button>';
+      body += '<p class="imuted">' + L("Impossible de charger les stats en direct. Vérifie ta connexion internet et réessaie.", "Couldn't load live stats. Check your internet connection and try again.") + '</p><button class="link" type="button" data-info="' + g.id + '">' + L("Réessayer", "Try again") + "</button>";
     } else if (info.state === "ok") {
       if (info.tab === "box") body += boxTable(g.home) + boxTable(g.away);
-      else if (info.tab === "lead") body += '<p class="imuted">Meilleurs joueurs de chaque équipe sur la saison.</p>' + leadList(g.home) + leadList(g.away);
+      else if (info.tab === "lead") body += '<p class="imuted">' + L("Meilleurs joueurs de chaque équipe sur la saison.", "Each team's top players this season.") + "</p>" + leadList(g.home) + leadList(g.away);
       else body += formList(g.home) + formList(g.away);
-      body += '<p class="isrc">Stats en direct (ESPN).' + updStr() + "</p>";
+      body += '<p class="isrc">' + L("Stats en direct (ESPN).", "Live stats (ESPN).") + updStr() + "</p>";
     }
     return t + '<div class="ibody" style="padding:12px 0 0">' + body + "</div>";
   }
@@ -1399,7 +1427,7 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
     });
     var top = list[0];
     list.forEach(function (r) {
-      if (r.gb == null || r.gb === "") { var gb = ((top.w - r.w) + (r.l - top.l)) / 2; r.gb = gb <= 0 ? "-" : String(gb).replace(".", ","); }
+      if (r.gb == null || r.gb === "") { var gb = ((top.w - r.w) + (r.l - top.l)) / 2; r.gb = gb <= 0 ? "-" : String(gb).replace(".", DEC); }
     });
     return list;
   }
@@ -1414,28 +1442,28 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
   }
   setInterval(function () { if (tab === "standings") loadStand(true); }, HOUR);
   function renderStandings() {
-    $("#count").textContent = "30 équipes";
+    $("#count").textContent = L("30 équipes", "30 teams");
     var stale = Date.now() - stand.at > (stand.state === "err" ? 5 * 60e3 : HOUR);
     if (stand.state === "idle" || (stand.state !== "loading" && stale)) loadStand();
     var d = stand.data;
     if (!d) {
-      $("#main").innerHTML = '<p class="isrc spad">' + (stand.state === "err" ? "Impossible de charger le classement pour l'instant. Vérifie ta connexion, il se rechargera tout seul." : "Chargement du classement…") + "</p>";
+      $("#main").innerHTML = '<p class="isrc spad">' + (stand.state === "err" ? L("Impossible de charger le classement pour l'instant. Vérifie ta connexion, il se rechargera tout seul.", "Couldn't load the standings right now. Check your connection, it will reload on its own.") : L("Chargement du classement…", "Loading standings…")) + "</p>";
       return;
     }
-    var h = '<div class="ctabs"><button type="button" data-conf="E" aria-pressed="' + (stand.conf === "E") + '">Conférence Est</button><button type="button" data-conf="W" aria-pressed="' + (stand.conf === "W") + '">Conférence Ouest</button></div>';
+    var h = '<div class="ctabs"><button type="button" data-conf="E" aria-pressed="' + (stand.conf === "E") + '">' + L("Conférence Est", "Eastern Conference") + '</button><button type="button" data-conf="W" aria-pressed="' + (stand.conf === "W") + '">' + L("Conférence Ouest", "Western Conference") + "</button></div>";
     ["E", "W"].forEach(function (k) {
       var rows = sortConf(d[k]);
-      h += '<div class="conf' + (stand.conf === k ? " on" : "") + '"><table class="stand"><thead><tr><th>#</th><th>Équipe</th><th>V</th><th>D</th><th>%</th><th>Écart</th><th>Série</th></tr></thead><tbody>';
+      h += '<div class="conf' + (stand.conf === k ? " on" : "") + '"><table class="stand"><thead><tr><th>#</th><th>' + L("Équipe", "Team") + "</th><th>" + L("V", "W") + "</th><th>" + L("D", "L") + "</th><th>%</th><th>" + L("Écart", "GB") + "</th><th>" + L("Série", "Streak") + "</th></tr></thead><tbody>";
       rows.forEach(function (r, i) {
         var z = i < 6 ? "po" : i < 10 ? "pi" : "";
-        var pct = r.w + r.l ? (r.w / (r.w + r.l)).toFixed(3).replace(/^0/, "").replace(".", ",") : "-";
-        var strk = String(r.strk || "").replace(/^W/, "V").replace(/^L/, "D");
+        var pct = r.w + r.l ? (r.w / (r.w + r.l)).toFixed(3).replace(/^0/, "").replace(".", DEC) : "-";
+        var strk = EN ? String(r.strk || "") : String(r.strk || "").replace(/^W/, "V").replace(/^L/, "D");
         h += '<tr class="' + z + (i === 5 || i === 9 ? " cut" : "") + '"><td class="rk">' + (i + 1) + '</td><td class="tm">' + crest(r.ab) + '<span class="full">' + esc(TEAMS[r.ab] || r.ab) + '</span><span class="short">' + esc(SHORT[r.ab] || r.ab) + "</span></td><td>" + r.w + "</td><td>" + r.l + "</td><td>" + pct + "</td><td>" + esc(r.gb) + "</td><td>" + esc(strk || "–") + "</td></tr>";
       });
       h += "</tbody></table></div>";
     });
-    h += '<p class="slegend"><i class="lg po"></i>1 à 6 : qualifiés pour les playoffs <i class="lg pi"></i>7 à 10 : play-in</p>';
-    h += '<p class="isrc spad">Classement en direct (ESPN). Mis à jour à ' + new Date(d.at).toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" }) + ", actualisé toutes les heures.</p>";
+    h += '<p class="slegend"><i class="lg po"></i>' + L("1 à 6 : qualifiés pour les playoffs ", "1 to 6: playoff spots ") + '<i class="lg pi"></i>' + L("7 à 10 : play-in", "7 to 10: play-in") + "</p>";
+    h += '<p class="isrc spad">' + L("Classement en direct (ESPN). Mis à jour à ", "Live standings (ESPN). Updated at ") + new Date(d.at).toLocaleTimeString(LOC, { hour: "2-digit", minute: "2-digit" }) + L(", actualisé toutes les heures.", ", refreshed every hour.") + "</p>";
     $("#main").innerHTML = h;
   }
   /* ---------- Mes économies (aide à l'arrêt) ---------- */
@@ -1444,7 +1472,9 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
   var ecoMem = E, ecoMsg = "";
   function ecoSave() { ecoMem = E; try { localStorage.setItem(EKEY, JSON.stringify(E)); } catch (e) {} acTouched(); }
   var PER = { jour: 1, semaine: 7, mois: 30.44 };
-  function fmtEur(n) { return Math.round(n).toLocaleString("fr-FR") + " €"; }
+  // Monnaie du compteur d'économies : choisie dans le formulaire, sinon devinée d'après la langue.
+  function defCur() { return !EN ? "€" : /-GB$/i.test(LOC) ? "£" : /-(IE|DE|FR|ES|IT|NL|BE|AT|PT|FI)$/i.test(LOC) ? "€" : "$"; }
+  function fmtEur(n) { var cur = (E && E.cur) || defCur(), v = Math.round(n).toLocaleString(LOC); return EN && cur !== "€" ? cur + v : v + " " + cur; }
   function ecoCalc() {
     if (!E || !E.since || !(E.amount > 0)) return null;
     var start = new Date(E.since + "T00:00:00").getTime();
@@ -1452,7 +1482,13 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
     var perDay = E.amount / (PER[E.per] || 7);
     return { days: days, saved: perDay * days, perDay: perDay, year: perDay * 365 };
   }
-  var HELP = '<div class="help"><h3>Besoin de parler à quelqu\'un ?</h3>' +
+  var HELP = EN ? '<div class="help"><h3>Need to talk to someone?</h3>' +
+    '<p><b>Gambling Therapy</b>: <a href="https://www.gamblingtherapy.org" target="_blank" rel="noopener">gamblingtherapy.org</a><br><small>Free, confidential online support wherever you are, in many languages: live chat, forums and a free app. For gamblers and the people close to them.</small></p>' +
+    '<p><b>USA</b>: National Problem Gambling Helpline, call or text <a href="tel:+18006973738">1-800-MY-RESET</a> (1-800-697-3738), 24/7.<br>' +
+    '<b>UK</b>: National Gambling Helpline, <a href="tel:+448088020133">0808 8020 133</a>, free, 24/7.<br>' +
+    '<b>France</b>: Joueurs Info Service, <a href="tel:+33974751313">09 74 75 13 13</a>.</p>' +
+    '<p><small>You can also ask to be blocked from betting sites: many countries offer a self-exclusion scheme. The services above can explain how.</small></p></div>'
+    : '<div class="help"><h3>Besoin de parler à quelqu\'un ?</h3>' +
     '<p><b>Joueurs Info Service</b> : <a href="tel:+33974751313">09 74 75 13 13</a><br><small>Appel anonyme et gratuit, tous les jours de 8h à 2h du matin. Pour les joueurs comme pour leurs proches.</small></p>' +
     '<p>Chat et forums sur <a href="https://www.joueurs-info-service.fr" target="_blank" rel="noopener">joueurs-info-service.fr</a></p>' +
     '<p><small>Tu peux aussi demander une interdiction volontaire de jeu : elle te bloque sur tous les sites de paris autorisés en France. Joueurs Info Service t\'explique comment faire.</small></p></div>';
@@ -1461,24 +1497,25 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
     var c = ecoCalc(), h = '<div class="eco">';
     if (ecoMsg) h += '<p class="ecomsg">' + esc(ecoMsg) + "</p>";
     if (c) {
-      h += '<div class="ecobig"><small>Argent que tu n\'as pas misé</small><b>' + fmtEur(c.saved) + "</b><span>" + c.days + " jour" + (c.days > 1 ? "s" : "") + " sans parier</span></div>";
-      h += '<div class="ecogrid"><div><small>Chaque semaine</small><b>' + fmtEur(c.perDay * 7) + '</b></div><div><small>Sur un an</small><b>' + fmtEur(c.year) + "</b></div></div>";
-      var steps = [[1, "Premier jour : le plus dur est de commencer."], [7, "Une semaine entière, bravo."], [30, "Un mois : une vraie habitude est en train de changer."], [90, "Trois mois. Prends le temps de mesurer le chemin parcouru."], [365, "Un an. Chapeau."]];
+      h += '<div class="ecobig"><small>' + L("Argent que tu n'as pas misé", "Money you didn't bet") + "</small><b>" + fmtEur(c.saved) + "</b><span>" + c.days + L(" jour", " day") + ((EN ? c.days !== 1 : c.days > 1) ? "s" : "") + L(" sans parier", " without betting") + "</span></div>";
+      h += '<div class="ecogrid"><div><small>' + L("Chaque semaine", "Every week") + "</small><b>" + fmtEur(c.perDay * 7) + "</b></div><div><small>" + L("Sur un an", "Over a year") + "</small><b>" + fmtEur(c.year) + "</b></div></div>";
+      var steps = EN ? [[1, "Day one: getting started is the hardest part."], [7, "A whole week, well done."], [30, "One month: a real habit is changing."], [90, "Three months. Take a moment to see how far you've come."], [365, "One year. Hats off."]] : [[1, "Premier jour : le plus dur est de commencer."], [7, "Une semaine entière, bravo."], [30, "Un mois : une vraie habitude est en train de changer."], [90, "Trois mois. Prends le temps de mesurer le chemin parcouru."], [365, "Un an. Chapeau."]];
       var reached = steps.filter(function (s) { return c.days >= s[0]; }).pop();
       if (reached) h += '<p class="ecostep">' + reached[1] + "</p>";
-      h += '<p class="imuted">Ici, tu ne joues qu\'avec des jetons sans valeur. Pas d\'argent, jamais.</p>';
-      h += '<div class="ecobtns"><button class="link" type="button" id="ecoedit">Modifier</button><button class="link" type="button" id="ecorestart">J\'ai rejoué avec de l\'argent</button></div>';
-      if (E.confirm) h += '<div class="ecoconf"><p>Ça arrive, et ça n\'efface pas tout ce que tu as déjà fait. Le compteur repartira d\'aujourd\'hui. Si tu en ressens le besoin, appelle le 09 74 75 13 13 : c\'est anonyme et gratuit.</p><button class="link" type="button" id="ecoyes">Repartir d\'aujourd\'hui</button> <button class="link" type="button" id="econo">Annuler</button></div>';
+      h += '<p class="imuted">' + L("Ici, tu ne joues qu'avec des jetons sans valeur. Pas d'argent, jamais.", "Here you only play with worthless tokens. No money, ever.") + "</p>";
+      h += '<div class="ecobtns"><button class="link" type="button" id="ecoedit">' + L("Modifier", "Edit") + '</button><button class="link" type="button" id="ecorestart">' + L("J'ai rejoué avec de l'argent", "I bet real money again") + "</button></div>";
+      if (E.confirm) h += '<div class="ecoconf"><p>' + L("Ça arrive, et ça n'efface pas tout ce que tu as déjà fait. Le compteur repartira d'aujourd'hui. Si tu en ressens le besoin, appelle le 09 74 75 13 13 : c'est anonyme et gratuit.", "It happens, and it doesn't erase everything you've already done. The counter will restart from today. If you feel the need, reach out to one of the free, confidential services below.") + '</p><button class="link" type="button" id="ecoyes">' + L("Repartir d'aujourd'hui", "Restart from today") + '</button> <button class="link" type="button" id="econo">' + L("Annuler", "Cancel") + "</button></div>";
     }
     if (!c || (E && E.editing)) {
       var today = new Date().toLocaleDateString("sv-SE");
-      h += '<div class="ecoform"><h3>Suivre ce que tu économises</h3><p class="imuted">Indique combien tu misais avant, et depuis quand tu ne paries plus. Ces infos restent sur ton appareil, et sur ton compte si tu en as créé un.</p>' +
-        '<label>Avant, je misais environ<span class="row"><input type="number" id="ecoamt" min="1" step="1" inputmode="numeric" value="' + (E && E.amount ? E.amount : "") + '" placeholder="50"> € par <select id="ecoper"><option value="jour">jour</option><option value="semaine">semaine</option><option value="mois">mois</option></select></span></label>' +
-        '<label>Je ne parie plus depuis le<input type="date" id="ecosince" max="' + today + '" value="' + (E && E.since ? E.since : today) + '"></label>' +
-        '<p class="err" id="ecoerr"></p><button class="parier on" type="button" id="ecosave">Enregistrer</button></div>';
+      var curNow = (E && E.cur) || defCur();
+      h += '<div class="ecoform"><h3>' + L("Suivre ce que tu économises", "Track what you save") + '</h3><p class="imuted">' + L("Indique combien tu misais avant, et depuis quand tu ne paries plus. Ces infos restent sur ton appareil, et sur ton compte si tu en as créé un.", "Enter how much you used to bet, and since when you've stopped. This stays on your device, and on your account if you created one.") + "</p>" +
+        "<label>" + L("Avant, je misais environ", "I used to bet about") + '<span class="row"><input type="number" id="ecoamt" min="1" step="1" inputmode="numeric" value="' + (E && E.amount ? E.amount : "") + '" placeholder="50"> <select id="ecocur" aria-label="' + L("Monnaie", "Currency") + '">' + ["€", "$", "£"].map(function (c2) { return '<option value="' + c2 + '"' + (c2 === curNow ? " selected" : "") + ">" + c2 + "</option>"; }).join("") + "</select> " + L("par", "per") + ' <select id="ecoper"><option value="jour">' + L("jour", "day") + '</option><option value="semaine">' + L("semaine", "week") + '</option><option value="mois">' + L("mois", "month") + "</option></select></span></label>" +
+        "<label>" + L("Je ne parie plus depuis le", "I stopped betting on") + '<input type="date" id="ecosince" max="' + today + '" value="' + (E && E.since ? E.since : today) + '"></label>' +
+        '<p class="err" id="ecoerr"></p><button class="parier on" type="button" id="ecosave">' + L("Enregistrer", "Save") + "</button></div>";
     }
     h += HELP;
-    if (KOFI) h += '<div class="ecosup"><a class="supbtn" href="' + esc(KOFI) + '" target="_blank" rel="noopener">&#9749; Soutenir Pronos Parquet</a><small>Facultatif : l\'appli reste gratuite et sans pub pour tout le monde.</small></div>';
+    if (KOFI) h += '<div class="ecosup"><a class="supbtn" href="' + esc(KOFI) + '" target="_blank" rel="noopener">&#9749; ' + L("Soutenir Pronos Parquet", "Support Pronos Parquet") + "</a><small>" + L("Facultatif : l'appli reste gratuite et sans pub pour tout le monde.", "Optional: the app stays free and ad-free for everyone.") + "</small></div>";
     h += "</div>";
     $("#main").innerHTML = h;
     var sel2 = $("#ecoper"); if (sel2) sel2.value = (E && E.per) || "semaine";
@@ -1487,13 +1524,13 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
     var t = e.target.closest("button"); if (!t) return;
     if (t.id === "ecosave") {
       var a = parseFloat($("#ecoamt").value), d = $("#ecosince").value, today = new Date().toLocaleDateString("sv-SE");
-      if (!(a > 0)) { $("#ecoerr").textContent = "Indique un montant."; return; }
-      if (!d || d > today) { $("#ecoerr").textContent = "Choisis une date passée ou aujourd'hui."; return; }
-      E = { amount: a, per: $("#ecoper").value, since: d }; ecoMsg = ""; ecoSave(); renderEco();
+      if (!(a > 0)) { $("#ecoerr").textContent = L("Indique un montant.", "Enter an amount."); return; }
+      if (!d || d > today) { $("#ecoerr").textContent = L("Choisis une date passée ou aujourd'hui.", "Pick today or a past date."); return; }
+      E = { amount: a, per: $("#ecoper").value, since: d, cur: ($("#ecocur") && $("#ecocur").value) || defCur() }; ecoMsg = ""; ecoSave(); renderEco();
     } else if (t.id === "ecoedit") { E.editing = true; E.confirm = false; renderEco(); }
     else if (t.id === "ecorestart") { E.confirm = true; E.editing = false; renderEco(); }
     else if (t.id === "econo") { E.confirm = false; renderEco(); }
-    else if (t.id === "ecoyes") { E.since = new Date().toLocaleDateString("sv-SE"); E.confirm = false; ecoSave(); ecoMsg = "C'est reparti. Un jour après l'autre."; renderEco(); }
+    else if (t.id === "ecoyes") { E.since = new Date().toLocaleDateString("sv-SE"); E.confirm = false; ecoSave(); ecoMsg = L("C'est reparti. Un jour après l'autre.", "Here we go again. One day at a time."); renderEco(); }
   });
 
   /* ---------- Calendrier et résultats en direct (ESPN) ---------- */
@@ -1629,19 +1666,19 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
 
   function acErr(e) {
     var m = String((e && (e.message || e.error_description)) || e || "").toLowerCase();
-    if (m.indexOf("invalid login") >= 0) return "Pseudo ou mot de passe incorrect.";
-    if (m.indexOf("already") >= 0) return "Ce pseudo est déjà pris. Choisis-en un autre.";
-    if (m.indexOf("password") >= 0 && m.indexOf("6") >= 0) return "Le mot de passe doit faire au moins 6 caractères.";
-    if (m.indexOf("rate") >= 0 || m.indexOf("too many") >= 0) return "Trop d'essais d'un coup. Réessaie dans quelques minutes.";
-    if (m.indexOf("fetch") >= 0 || m.indexOf("network") >= 0 || !navigator.onLine) return "Pas de connexion internet. Réessaie quand tu es connecté.";
-    return "Ça n'a pas marché. Réessaie dans un instant.";
+    if (m.indexOf("invalid login") >= 0) return L("Pseudo ou mot de passe incorrect.", "Wrong username or password.");
+    if (m.indexOf("already") >= 0) return L("Ce pseudo est déjà pris. Choisis-en un autre.", "This username is taken. Pick another one.");
+    if (m.indexOf("password") >= 0 && m.indexOf("6") >= 0) return L("Le mot de passe doit faire au moins 6 caractères.", "Your password must be at least 6 characters long.");
+    if (m.indexOf("rate") >= 0 || m.indexOf("too many") >= 0) return L("Trop d'essais d'un coup. Réessaie dans quelques minutes.", "Too many attempts at once. Try again in a few minutes.");
+    if (m.indexOf("fetch") >= 0 || m.indexOf("network") >= 0 || !navigator.onLine) return L("Pas de connexion internet. Réessaie quand tu es connecté.", "No internet connection. Try again once you're online.");
+    return L("Ça n'a pas marché. Réessaie dans un instant.", "That didn't work. Try again in a moment.");
   }
   function acSubmit() {
     var pseudo = ($("#acpseudo").value || "").trim(), pw = $("#acpw").value || "", low = pseudo.toLowerCase();
-    if (!/^[a-z0-9_.-]{3,20}$/.test(low)) { AC.msg = "Pseudo : 3 à 20 caractères, lettres sans accent, chiffres, point, tiret ou _."; acRender(); return; }
-    if (pw.length < 6) { AC.msg = "Le mot de passe doit faire au moins 6 caractères."; acRender(); return; }
-    if (AC.mode === "signup" && pw !== ($("#acpw2").value || "")) { AC.msg = "Les deux mots de passe ne sont pas identiques."; acRender(); return; }
-    if (!AC.sb) { AC.msg = "Le service de comptes n'est pas joignable. Vérifie ta connexion internet."; acRender(); return; }
+    if (!/^[a-z0-9_.-]{3,20}$/.test(low)) { AC.msg = L("Pseudo : 3 à 20 caractères, lettres sans accent, chiffres, point, tiret ou _.", "Username: 3 to 20 characters, letters without accents, digits, dot, dash or _."); acRender(); return; }
+    if (pw.length < 6) { AC.msg = L("Le mot de passe doit faire au moins 6 caractères.", "Your password must be at least 6 characters long."); acRender(); return; }
+    if (AC.mode === "signup" && pw !== ($("#acpw2").value || "")) { AC.msg = L("Les deux mots de passe ne sont pas identiques.", "The two passwords don't match."); acRender(); return; }
+    if (!AC.sb) { AC.msg = L("Le service de comptes n'est pas joignable. Vérifie ta connexion internet.", "The account service can't be reached. Check your internet connection."); acRender(); return; }
     AC.busy = true; AC.msg = ""; acRender();
     var email = low + MAIL_DOMAIN, mode = AC.mode;
     var p = mode === "signup"
@@ -1652,7 +1689,7 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
       if (!r.data || !r.data.session) throw new Error("no session");
       AC.user = r.data.session.user;
       AC.busy = false;
-      AC.ok = mode === "signup" ? "Compte créé. Ta partie est maintenant sauvegardée en ligne." : "Connecté. Ta partie a été récupérée.";
+      AC.ok = mode === "signup" ? L("Compte créé. Ta partie est maintenant sauvegardée en ligne.", "Account created. Your game is now saved online.") : L("Connecté. Ta partie a été récupérée.", "Logged in. Your game has been restored.");
       return acPull(mode === "signup" ? "local" : "remote");
     }).then(function () { acRender(); acRenderBtn(); })
       .catch(function (e) { AC.busy = false; AC.msg = acErr(e); acRender(); });
@@ -1668,43 +1705,43 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
       if (r.error) throw r.error;
       return AC.sb.auth.signOut();
     }).then(function () {
-      AC.user = null; AC.busy = false; AC.state = ""; AC.ok = "Compte supprimé. Ta partie reste sur cet appareil."; acRender(); acRenderBtn();
+      AC.user = null; AC.busy = false; AC.state = ""; AC.ok = L("Compte supprimé. Ta partie reste sur cet appareil.", "Account deleted. Your game stays on this device."); acRender(); acRenderBtn();
     }).catch(function (e) { AC.busy = false; AC.msg = acErr(e); acRender(); });
   }
 
   function acRenderBtn() {
     var b = $("#acbtn"); if (!b) return;
     b.hidden = !SUPA_URL;
-    $("#acname").textContent = AC.user ? acPseudo() : "Compte";
+    $("#acname").textContent = AC.user ? acPseudo() : L("Compte", "Account");
     $("#acdot").className = "acdot" + (AC.user ? " " + (AC.state || "ok") : "");
-    b.setAttribute("aria-label", AC.user ? "Mon compte : " + acPseudo() : "Créer un compte ou se connecter");
+    b.setAttribute("aria-label", AC.user ? L("Mon compte : ", "My account: ") + acPseudo() : L("Créer un compte ou se connecter", "Create an account or log in"));
   }
   function acRender() {
-    var h = '<div class="ihead"><h3 style="margin:0;font-family:var(--fd);letter-spacing:.06em;text-transform:uppercase">Mon compte</h3><button class="x" type="button" id="acx" aria-label="Fermer">×</button></div><div class="acbody">';
+    var h = '<div class="ihead"><h3 style="margin:0;font-family:var(--fd);letter-spacing:.06em;text-transform:uppercase">' + L("Mon compte", "My account") + '</h3><button class="x" type="button" id="acx" aria-label="' + L("Fermer", "Close") + '">×</button></div><div class="acbody">';
     if (AC.ok) h += '<p class="acok">' + esc(AC.ok) + "</p>";
     if (AC.user) {
-      var st = AC.state === "wait" ? "Sauvegarde en cours…" : AC.state === "off" ? "Pas de connexion : la sauvegarde partira dès que tu seras de nouveau en ligne." : AC.at ? "Sauvegardé à " + timeStr(AC.at) + "." : "Sauvegardé.";
-      h += '<div class="acwho"><small class="imuted">Connecté en tant que</small><b>' + esc(acPseudo()) + '</b><span class="imuted">' + st + "</span></div>";
-      h += "<p>Tes jetons, tes paris et ton compteur d'économies sont gardés sur ton compte. Connecte-toi avec le même pseudo sur un autre téléphone ou ordinateur pour les retrouver.</p>";
-      h += '<div class="acrow"><button class="link" type="button" id="acsync"' + (AC.busy ? " disabled" : "") + '>Sauvegarder maintenant</button><button class="link" type="button" id="acout"' + (AC.busy ? " disabled" : "") + ">Se déconnecter</button></div>";
-      h += '<button class="link acdanger" type="button" id="acdel"' + (AC.busy ? " disabled" : "") + ">" + (AC.delArmed ? "Confirmer : supprimer mon compte" : "Supprimer mon compte") + "</button>";
-      if (AC.delArmed) h += '<p class="imuted">Ton compte et sa sauvegarde en ligne seront effacés. Ta partie reste sur cet appareil.</p>';
+      var st = AC.state === "wait" ? L("Sauvegarde en cours…", "Saving…") : AC.state === "off" ? L("Pas de connexion : la sauvegarde partira dès que tu seras de nouveau en ligne.", "Offline: your save will be sent as soon as you're back online.") : AC.at ? L("Sauvegardé à ", "Saved at ") + timeStr(AC.at) + "." : L("Sauvegardé.", "Saved.");
+      h += '<div class="acwho"><small class="imuted">' + L("Connecté en tant que", "Logged in as") + '</small><b>' + esc(acPseudo()) + '</b><span class="imuted">' + st + "</span></div>";
+      h += "<p>" + L("Tes jetons, tes paris et ton compteur d'économies sont gardés sur ton compte. Connecte-toi avec le même pseudo sur un autre téléphone ou ordinateur pour les retrouver.", "Your tokens, bets and savings tracker are kept on your account. Log in with the same username on another phone or computer to get them back.") + "</p>";
+      h += '<div class="acrow"><button class="link" type="button" id="acsync"' + (AC.busy ? " disabled" : "") + ">" + L("Sauvegarder maintenant", "Save now") + '</button><button class="link" type="button" id="acout"' + (AC.busy ? " disabled" : "") + ">" + L("Se déconnecter", "Log out") + "</button></div>";
+      h += '<button class="link acdanger" type="button" id="acdel"' + (AC.busy ? " disabled" : "") + ">" + (AC.delArmed ? L("Confirmer : supprimer mon compte", "Confirm: delete my account") : L("Supprimer mon compte", "Delete my account")) + "</button>";
+      if (AC.delArmed) h += '<p class="imuted">' + L("Ton compte et sa sauvegarde en ligne seront effacés. Ta partie reste sur cet appareil.", "Your account and its online save will be erased. Your game stays on this device.") + "</p>";
       if (AC.msg) h += '<p class="err">' + esc(AC.msg) + "</p>";
     } else {
       var su = AC.mode === "signup";
-      h += '<div class="acmodes" role="group" aria-label="Choix"><button type="button" data-acmode="login" aria-pressed="' + !su + '">Se connecter</button><button type="button" data-acmode="signup" aria-pressed="' + su + '">Créer un compte</button></div>';
+      h += '<div class="acmodes" role="group" aria-label="' + L("Choix", "Choice") + '"><button type="button" data-acmode="login" aria-pressed="' + !su + '">' + L("Se connecter", "Log in") + '</button><button type="button" data-acmode="signup" aria-pressed="' + su + '">' + L("Créer un compte", "Sign up") + "</button></div>";
       h += '<p class="imuted">' + (su
-        ? "Garde ta partie en sécurité et retrouve-la sur un autre appareil. Pas besoin d'e-mail : juste un pseudo et un mot de passe. Note-les bien : sans e-mail, un mot de passe oublié ne peut pas être récupéré."
-        : "Connecte-toi pour récupérer ta partie sauvegardée.") + "</p>";
+        ? L("Garde ta partie en sécurité et retrouve-la sur un autre appareil. Pas besoin d'e-mail : juste un pseudo et un mot de passe. Note-les bien : sans e-mail, un mot de passe oublié ne peut pas être récupéré.", "Keep your game safe and get it back on another device. No email needed: just a username and a password. Write them down: without an email, a forgotten password can't be recovered.")
+        : L("Connecte-toi pour récupérer ta partie sauvegardée.", "Log in to get your saved game back.")) + "</p>";
       h += '<form id="acform" class="acbody" style="padding:0" novalidate>';
-      h += '<label>Pseudo<input id="acpseudo" autocomplete="username" autocapitalize="off" spellcheck="false" maxlength="20"></label>';
-      h += '<label>Mot de passe<input id="acpw" type="password" autocomplete="' + (su ? "new-password" : "current-password") + '" minlength="6"></label>';
-      if (su) h += '<label>Confirme le mot de passe<input id="acpw2" type="password" autocomplete="new-password"></label>';
-      if (su) h += '<p class="imuted">Ta partie actuelle sur cet appareil (jetons, paris, économies) sera rattachée au nouveau compte.</p>';
-      else h += '<p class="imuted">La partie de ton compte remplacera celle de cet appareil.</p>';
+      h += "<label>" + L("Pseudo", "Username") + '<input id="acpseudo" autocomplete="username" autocapitalize="off" spellcheck="false" maxlength="20"></label>';
+      h += "<label>" + L("Mot de passe", "Password") + '<input id="acpw" type="password" autocomplete="' + (su ? "new-password" : "current-password") + '" minlength="6"></label>';
+      if (su) h += "<label>" + L("Confirme le mot de passe", "Confirm password") + '<input id="acpw2" type="password" autocomplete="new-password"></label>';
+      if (su) h += '<p class="imuted">' + L("Ta partie actuelle sur cet appareil (jetons, paris, économies) sera rattachée au nouveau compte.", "Your current game on this device (tokens, bets, savings) will be linked to the new account.") + "</p>";
+      else h += '<p class="imuted">' + L("La partie de ton compte remplacera celle de cet appareil.", "The game saved on your account will replace the one on this device.") + "</p>";
       h += '<p class="err" id="acerr">' + esc(AC.msg) + "</p>";
-      h += '<p class="imuted"><a href="confidentialite.html" style="color:inherit">Ce qu\'on garde sur ton compte</a></p>';
-      h += '<button class="parier" type="submit"' + (AC.busy ? " disabled" : "") + ">" + (AC.busy ? "Patiente…" : su ? "Créer mon compte" : "Me connecter") + "</button></form>";
+      h += '<p class="imuted"><a href="' + L("confidentialite.html", "privacy.html") + '" style="color:inherit">' + L("Ce qu'on garde sur ton compte", "What we keep on your account") + "</a></p>";
+      h += '<button class="parier" type="submit"' + (AC.busy ? " disabled" : "") + ">" + (AC.busy ? L("Patiente…", "Please wait…") : su ? L("Créer mon compte", "Create my account") : L("Me connecter", "Log in")) + "</button></form>";
     }
     h += "</div>";
     var keep = {}; ["acpseudo", "acpw", "acpw2"].forEach(function (id) { var el = $("#" + id); if (el) keep[id] = el.value; });

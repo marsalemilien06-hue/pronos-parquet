@@ -1,9 +1,9 @@
 {
   "id": "/pronos-parquet/",
-  "name": "Pronos Parquet · la NBA sans parier d'argent",
+  "name": "Pronos Parquet · NBA picks without betting money",
   "short_name": "Pronos Parquet",
-  "description": "Suis la NBA et fais tes pronostics avec des jetons sans valeur. Jamais d'argent.",
-  "lang": "fr",
+  "description": "Follow the NBA and make picks with worthless play tokens. No real money, ever.",
+  "lang": "en",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
