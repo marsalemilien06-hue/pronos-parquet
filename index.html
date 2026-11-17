@@ -297,7 +297,8 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
 /* fiche match */
 .infob { align-self: center; min-height: 34px; padding: 0 14px; border-radius: 2px; border: 1px solid var(--line); background: transparent; color: var(--muted); font-family: var(--fd); font-weight: 600; font-size: 0.95rem; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; }
 .infob:hover { color: var(--ink); border-color: var(--red); }
-.teams[data-info] { cursor: pointer; }
+.teams[data-info] { cursor: pointer; border-radius: 4px; padding: 4px 8px; }
+.teams[data-info]:hover { background: var(--soft); }
 .ov { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.72); z-index: 20; display: flex; align-items: flex-start; justify-content: center; padding: 24px 12px; overflow-y: auto; }
 .ovp { width: 100%; max-width: 760px; background: var(--card); border: 1px solid var(--line); border-top: 3px solid var(--red); border-radius: 2px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6); }
 .ihead { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 14px 16px 4px; }
@@ -917,7 +918,6 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
       if (r.h > r.a) aw = " lost"; else hw = " lost";
     } else mid = '<span class="ko">' + timeStr(g.t) + "</span>";
     s += '<div class="teams" data-info="' + g.id + '" title="Voir les infos du match"><span class="' + hw.trim() + '">' + SHORT[g.home] + "</span>" + crest(g.home) + mid + crest(g.away) + '<span class="' + aw.trim() + '">' + SHORT[g.away] + "</span></div>";
-    s += '<button class="infob" type="button" data-info="' + g.id + '">' + (r && r.real ? "Stats du match &rsaquo;" : "Blessés &amp; stats des joueurs &rsaquo;") + "</button>";
     if (!r) {
       s += '<div class="btns">' + ["home", "away"].map(function (side) {
         var abbr = side === "home" ? g.home : g.away, p = side === "home" ? g.ph : g.pa;
@@ -925,7 +925,6 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
         var bar = p != null ? '<div class="pbar"><i class="' + (p < 50 ? "low" : "") + '" style="width:' + Math.max(3, p) + '%"></i></div>' : '<div class="pbar"></div>';
         return '<div class="cell"><button class="yel' + (on ? " on" : "") + '" type="button" data-g="' + g.id + '" data-side="' + side + '"' + (locked ? " disabled" : "") + '><span class="nm">' + TEAMS[abbr] + '</span><span class="od">' + fmtOdd(oddsOf(g, side)) + (moves[g.id + (side === "home" ? "h" : "a")] ? '<i class="mv ' + (moves[g.id + (side === "home" ? "h" : "a")] > 0 ? "up" : "dn") + '">' + (moves[g.id + (side === "home" ? "h" : "a")] > 0 ? "▲" : "▼") + "</i>" : "") + "</span></button>" + bar + "</div>";
       }).join("") + "</div>";
-      if (!locked) s += '<button class="moreb" type="button" data-info="' + g.id + '">Tous les paris : handicap, total, joueurs &rsaquo;</button>';
     }
     var b = myBet(g.id);
     if (b) {
