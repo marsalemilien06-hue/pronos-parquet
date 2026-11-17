@@ -333,6 +333,12 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
 .ibox td { text-align: right; padding: 6px; border-bottom: 1px solid var(--line); }
 .ibox th:first-child, .ibox td:first-child { text-align: left; }
 .ibox tr:last-child td { border-bottom: 0; }
+/* Soutien */
+.support { max-width: 1240px; margin: 8px auto 0; padding: 0 16px; display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; }
+.support small, .ecosup small { color: var(--muted); font-size: 0.82rem; max-width: 520px; }
+.supbtn { display: inline-flex; align-items: center; gap: 8px; min-height: 42px; padding: 0 18px; border: 1px solid var(--line); border-radius: 999px; background: var(--card); color: var(--ink); text-decoration: none; font-family: var(--fd); font-weight: 600; font-size: 1.02rem; letter-spacing: 0.06em; text-transform: uppercase; }
+.supbtn:hover { border-color: var(--red); }
+.ecosup { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; border-top: 1px solid var(--line); padding-top: 14px; }
 /* Compte */
 .acbtn { display: flex; align-items: center; gap: 7px; border: 0; border-left: 1px solid var(--line); background: transparent; color: var(--ink); padding: 0 16px; font-family: var(--fd); font-weight: 600; font-size: 1rem; letter-spacing: 0.06em; text-transform: uppercase; max-width: 150px; }
 .acbtn span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -415,6 +421,7 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
 <div class="ov acov" id="acov" hidden><div class="ovp acp" id="acp" role="dialog" aria-modal="true" aria-label="Mon compte"></div></div>
 <div class="ov" id="ov" hidden><div class="ovp" id="ovp" role="dialog" aria-modal="true" aria-label="Infos du match"></div></div>
 
+<div class="support" id="support" hidden><a class="supbtn" id="suplink" href="#" target="_blank" rel="noopener">&#9749; Soutenir Pronos Parquet</a><small>Facultatif, ça ne débloque rien : l'appli reste gratuite et sans pub pour tout le monde. Ça aide à payer son entretien.</small></div>
 <p class="foot">Pronos Parquet se joue uniquement avec des jetons sans valeur : on ne peut ni acheter de jetons, ni les échanger contre de l'argent. L'appli est faite pour suivre la NBA sans parier d'argent. Si tu as du mal à t'arrêter, ou si un proche est concerné, appelle Joueurs Info Service au 09 74 75 13 13 (anonyme et gratuit, tous les jours de 8h à 2h) ou va sur joueurs-info-service.fr. Calendrier, résultats, blessés, stats et classement : ESPN, actualisés toutes les heures quand l'appareil est connecté. Appli indépendante, gratuite et sans publicité, sans lien avec la NBA, ses équipes ni ESPN. Les écussons sont des pastilles aux couleurs des équipes, pas les logos officiels. Tes jetons et ton compteur d'économies restent sur cet appareil. Si tu crées un compte (un pseudo et un mot de passe, sans e-mail), ils sont aussi sauvegardés en ligne pour les retrouver sur un autre appareil ou après avoir effacé l'appli. <a href="confidentialite.html" style="color:inherit">Confidentialité</a></p>
 
 <script>
@@ -513,6 +520,10 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
     }).sort(function (a, b) { return a.t - b.t; });
   }
   setGames(FEED.games);
+
+  // Lien de dons (Ko-fi). Vide = bouton caché.
+  var KOFI = "";
+  (function () { var sp = document.getElementById("support"); if (KOFI && sp) { sp.hidden = false; document.getElementById("suplink").href = KOFI; } })();
 
   var KEY = "pronosParquet_v1";
   var mem = null;
@@ -1466,7 +1477,9 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
         '<label>Je ne parie plus depuis le<input type="date" id="ecosince" max="' + today + '" value="' + (E && E.since ? E.since : today) + '"></label>' +
         '<p class="err" id="ecoerr"></p><button class="parier on" type="button" id="ecosave">Enregistrer</button></div>';
     }
-    h += HELP + "</div>";
+    h += HELP;
+    if (KOFI) h += '<div class="ecosup"><a class="supbtn" href="' + esc(KOFI) + '" target="_blank" rel="noopener">&#9749; Soutenir Pronos Parquet</a><small>Facultatif : l\'appli reste gratuite et sans pub pour tout le monde.</small></div>';
+    h += "</div>";
     $("#main").innerHTML = h;
     var sel2 = $("#ecoper"); if (sel2) sel2.value = (E && E.per) || "semaine";
   }
