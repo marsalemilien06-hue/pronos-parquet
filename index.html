@@ -129,7 +129,21 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--red-soft); 
 .pbar i.low { background: var(--red); }
 .mybet { font-size: 0.88rem; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; justify-content: center; }
 .st { font-family: var(--fd); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
-.st.won { color: var(--win); } .st.lost { color: var(--lose); } .st.pending { color: var(--muted); }
+.st.won { color: var(--win); } .st.lost { color: var(--lose); } .st.pending { color: var(--muted); } .st.void { color: #f5b942; }
+.moreb { align-self: stretch; min-height: 38px; border: 1px dashed var(--line); background: transparent; color: var(--ink); border-radius: 2px; font-family: var(--fd); font-weight: 600; font-size: 1rem; letter-spacing: 0.08em; text-transform: uppercase; }
+.moreb:hover { border-color: var(--red); }
+.more { display: flex; flex-direction: column; gap: 10px; background: #0c0c0e; border: 1px solid var(--line); border-radius: 2px; padding: 12px; }
+.more h4 { margin: 4px 0 0; font-family: var(--fd); font-size: 1.05rem; letter-spacing: 0.08em; text-transform: uppercase; }
+.more .src { font-size: 0.78rem; color: var(--muted); margin: -6px 0 0; }
+.hrow { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.ob { min-height: 46px; display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 6px 14px; background: var(--soft); border: 1px solid var(--line); border-radius: 999px; color: var(--ink); text-align: left; min-width: 0; }
+.ob .nm { font-size: 0.82rem; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.ob .od { font-family: var(--fd); font-size: 1.35rem; font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; }
+.ob:hover { border-color: var(--red); }
+.ob.on { background: var(--red); border-color: var(--red); color: #fff; } .ob.on .nm { color: #ffe0e2; }
+.prow { display: flex; flex-direction: column; gap: 6px; padding-top: 8px; border-top: 1px solid var(--line); }
+.prow small { color: var(--muted); }
+@media (max-width: 420px) { .ob { padding: 6px 10px; } .ob .od { font-size: 1.2rem; } }
 .link { min-height: 40px; padding: 0 14px; border-radius: 4px; border: 1px solid var(--line); background: var(--soft); font-weight: 500; align-self: center; }
 .link:hover { border-color: var(--red); }
 .link:disabled { opacity: 0.5; cursor: default; }
@@ -460,7 +474,7 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
   function setGames(list) {
     function n(v) { return v == null ? null : v; }
     G = list.map(function (r) {
-      return { id: r.i, t: new Date(r.s).getTime(), home: r.h, away: r.a, sh: n(r.sh), sa: n(r.sa), ph: n(r.ph), pa: n(r.pa), oh: n(r.oh), oa: n(r.oa), oe: r.oe || "" };
+      return { id: r.i, t: new Date(r.s).getTime(), home: r.h, away: r.a, sh: n(r.sh), sa: n(r.sa), ph: n(r.ph), pa: n(r.pa), oh: n(r.oh), oa: n(r.oa), oe: r.oe || "", sp: n(r.sp), spo: n(r.spo), spa: n(r.spa) };
     }).sort(function (a, b) { return a.t - b.t; });
   }
   setGames(FEED.games);
@@ -501,6 +515,88 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
     if (p == null) return side === "home" ? 1.87 : 1.97;
     return Math.max(1.04, Math.round(10000 / (p * 1.05)) / 100);
   }
+  /* ---------- Handicap (différence de points) et stats des joueurs ---------- */
+  var SIG = 13; // écart-type de la différence de points en NBA
+  function Phi(z) { var t = 1 / (1 + 0.2316419 * Math.abs(z)), d = 0.3989423 * Math.exp(-z * z / 2), q = d * t * (0.3193815 + t * (-0.3565638 + t * (1.781478 + t * (-1.821256 + t * 1.330274)))); return z > 0 ? 1 - q : q; }
+  function PhiInv(p) { var lo = -8, hi = 8; for (var i = 0; i < 60; i++) { var m = (lo + hi) / 2; if (Phi(m) < p) lo = m; else hi = m; } return (lo + hi) / 2; }
+  function clampOdd(o) { return Math.round(Math.min(15, Math.max(1.05, o)) * 100) / 100; }
+  function fmtLine(n) { return (n > 0 ? "+" : n < 0 ? "−" : "") + String(Math.abs(n)).replace(".", ","); }
+  // Ligne du bookmaker si publiée, sinon ligne estimée à partir des probabilités de victoire.
+  function spreadInfo(g) {
+    if (g.sp != null) return { line: g.sp, mu: -g.sp, real: true, oh: g.spo, oa: g.spa };
+    var p = g.ph != null ? g.ph / 100 : (g.oh && g.oa ? (1 / g.oh) / (1 / g.oh + 1 / g.oa) : 0.55);
+    p = Math.min(0.98, Math.max(0.02, p));
+    var mu = SIG * PhiInv(p);
+    return { line: -(Math.floor(mu) + 0.5), mu: mu, real: false };
+  }
+  // line : handicap appliqué à l'équipe choisie (ex. −7,5 = doit gagner de 8 points ou plus).
+  function hcpOdds(g, side, line) {
+    var i = spreadInfo(g), Lh = side === "home" ? line : -line;
+    if (i.real && Math.abs(Lh - i.line) < 0.01) { var bk = side === "home" ? i.oh : i.oa; return bk || 1.91; }
+    var ph = Phi((i.mu + Lh) / SIG);
+    return clampOdd(1 / ((side === "home" ? ph : 1 - ph) * 1.05));
+  }
+  var STAT = { pts: ["Points", "pts"], reb: ["Rebonds", "reb."], ast: ["Passes décisives", "passes"] };
+  function statSd(stat, avg) { return stat === "pts" ? Math.max(3, 0.28 * avg) : stat === "reb" ? Math.max(1.5, 0.35 * avg) : Math.max(1.2, 0.38 * avg); }
+  function propOdds(pr, ou) {
+    var pOver = 1 - Phi((pr.line - pr.avg) / statSd(pr.stat, pr.avg));
+    return clampOdd(1 / ((ou === "over" ? pOver : 1 - pOver) * 1.06));
+  }
+  function simStat(stat, avg) {
+    var u = Math.random() || 0.5, v = Math.random();
+    var z = Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+    return Math.max(0, Math.round(avg + z * statSd(stat, avg)));
+  }
+  var propData = {}, propTry = {}, more = {};
+  function catStat(c) { c = String(c || "").toLowerCase(); return c.indexOf("point") === 0 ? "pts" : c.indexOf("rebound") === 0 ? "reb" : c.indexOf("assist") === 0 ? "ast" : ""; }
+  function loadProps(g) {
+    var pd = propData[g.id];
+    if (pd && (pd.state === "loading" || (pd.state === "ok" && Date.now() - pd.at < HOUR))) return;
+    propData[g.id] = { state: "loading", list: pd ? pd.list : [], at: Date.now() };
+    loadInfo(g).then(function (d) {
+      var list = [];
+      [g.home, g.away].forEach(function (ab) {
+        var out = {};
+        ((d.inj && d.inj[ab]) || []).forEach(function (x) { if (statusFr(x[3])[1] === "out") out[x[0]] = 1; });
+        ((d.lead && d.lead[ab]) || []).forEach(function (c) {
+          var st = catStat(c.cat), avg = c.num;
+          if (!st || !(avg > 0) || avg > (st === "pts" ? 60 : 25) || out[c.who]) return;
+          var key = (c.id || c.who) + ":" + st;
+          if (list.some(function (x) { return x.key === key; })) return;
+          list.push({ key: key, pid: c.id || "", name: c.who, team: ab, stat: st, avg: Math.round(avg * 10) / 10, line: Math.max(0.5, Math.floor(avg) + 0.5) });
+        });
+      });
+      propData[g.id] = { state: "ok", list: list, at: Date.now() };
+    }).catch(function () { propData[g.id] = { state: "err", list: [], at: Date.now() }; })
+      .then(function () { if (tab === "games" && more[g.id]) renderMain(); });
+  }
+  function findProp(gid, key) { var pd = propData[gid]; if (!pd) return null; for (var i = 0; i < pd.list.length; i++) if (pd.list[i].key === key) return pd.list[i]; return null; }
+  function moreHtml(g) {
+    var i = spreadInfo(g), h = '<div class="more"><h4>Différence de points</h4><p class="src">' + (i.real ? "Ligne et cotes du bookmaker." : "Ligne estimée d'après les chances de victoire, remplacée dès que les bookmakers publient la leur.") + "</p>";
+    [i.line - 4, i.line, i.line + 4].forEach(function (Lh) {
+      h += '<div class="hrow">' + [["home", Lh], ["away", -Lh]].map(function (x) {
+        var side = x[0], line = x[1], ab = side === "home" ? g.home : g.away, on = isSel({ gid: g.id, type: "hcp", side: side, line: line });
+        return '<button class="ob' + (on ? " on" : "") + '" type="button" data-hcp="' + g.id + '" data-side="' + side + '" data-line="' + line + '"><span class="nm">' + SHORT[ab] + " " + fmtLine(line) + '</span><span class="od">' + fmtOdd(hcpOdds(g, side, line)) + "</span></button>";
+      }).join("") + "</div>";
+    });
+    h += '<p class="src" style="margin:0">Le chiffre s\'ajoute au score de l\'équipe choisie. ' + SHORT[g.home] + " " + fmtLine(i.line) + " : " + (i.line < 0 ? "les " + SHORT[g.home] + " doivent gagner de " + Math.ceil(-i.line) + " points ou plus." : "les " + SHORT[g.home] + " peuvent perdre de " + Math.floor(i.line) + " points maximum.") + "</p>";
+    h += "<h4>Stats des joueurs</h4>";
+    var pd = propData[g.id];
+    if (!pd || (pd.state === "loading" && !pd.list.length)) h += '<p class="imuted">Chargement des joueurs…</p>';
+    else if (pd.state === "err") h += '<p class="imuted">Joueurs indisponibles pour l\'instant. Vérifie ta connexion internet.</p>';
+    else if (!pd.list.length) h += '<p class="imuted">Pas encore de joueurs proposés pour ce match.</p>';
+    else {
+      pd.list.forEach(function (pr) {
+        h += '<div class="prow"><div><b>' + esc(pr.name) + "</b> <small>" + SHORT[pr.team] + " · " + STAT[pr.stat][0] + " · moyenne " + String(pr.avg).replace(".", ",") + '</small></div><div class="hrow">' + ["over", "under"].map(function (ou) {
+          var on = isSel({ gid: g.id, type: "prop", key: pr.key, ou: ou });
+          return '<button class="ob' + (on ? " on" : "") + '" type="button" data-prop="' + g.id + '" data-key="' + esc(pr.key) + '" data-ou="' + ou + '"><span class="nm">' + (ou === "over" ? "Plus de " : "Moins de ") + String(pr.line).replace(".", ",") + '</span><span class="od">' + fmtOdd(propOdds(pr, ou)) + "</span></button>";
+        }).join("") + "</div></div>";
+      });
+      h += '<p class="src" style="margin:0">Cotes calculées d\'après les moyennes de la saison (ESPN), les blessés absents sont retirés. Si le joueur ne joue pas, le pari est remboursé.</p>';
+    }
+    return h + "</div>";
+  }
+
   function result(g) {
     if (g.sh != null) return { h: g.sh, a: g.sa, real: true };
     var s = S.sims[g.id];
@@ -517,7 +613,50 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
   function legState(l) {
     var g = findGame(l.gid), r = g && result(g);
     if (!r) return "pending";
+    if (l.type === "hcp") {
+      var mine = (l.side === "home" ? r.h : r.a) + l.line, oth = l.side === "home" ? r.a : r.h;
+      return mine > oth ? "won" : mine < oth ? "lost" : "void";
+    }
+    if (l.type === "prop") {
+      var v;
+      if (r.real) { v = l.val; if (v === undefined) return "pending"; }
+      else {
+        var sm = S.sims[g.id]; sm.p = sm.p || {};
+        if (sm.p[l.key] == null) { sm.p[l.key] = simStat(l.stat, l.avg); save(); }
+        v = sm.p[l.key];
+      }
+      if (v === "void") return "void";
+      return (l.ou === "over" ? v > l.line : v < l.line) ? "won" : "lost";
+    }
     return ((r.h > r.a ? "home" : "away") === l.side) ? "won" : "lost";
+  }
+  // Après un vrai match : on va chercher la feuille de match pour régler les paris sur les joueurs.
+  function resolveProps() {
+    var todo = {};
+    S.bets.forEach(function (b) {
+      if (b.status !== "pending") return;
+      b.legs.forEach(function (l) { var g = l.type === "prop" && l.val === undefined && findGame(l.gid); if (g && g.sh != null) todo[g.id] = g; });
+    });
+    Object.keys(todo).forEach(function (gid) {
+      if (propTry[gid] && Date.now() - propTry[gid] < 10 * 60e3) return;
+      propTry[gid] = Date.now();
+      loadInfo(todo[gid], true).then(function (d) {
+        var changed = false;
+        S.bets.forEach(function (b) {
+          if (b.status !== "pending") return;
+          b.legs.forEach(function (l) {
+            if (l.type !== "prop" || l.gid !== gid || l.val !== undefined) return;
+            var rows = d.box && d.box[l.team];
+            if (!rows) return;
+            var row = null;
+            rows.forEach(function (x) { if ((l.pid && x.id === l.pid) || (!l.pid && x.full === l.name)) row = x; });
+            var n = row ? parseInt(row[l.stat], 10) : NaN;
+            l.val = row && !isNaN(n) ? n : "void"; changed = true;
+          });
+        });
+        if (changed) { save(); renderAll(); }
+      }).catch(function () {});
+    });
   }
   function settle() {
     var changed = false;
@@ -525,8 +664,10 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
       if (b.status !== "pending") return;
       var st = b.legs.map(legState);
       if (st.indexOf("lost") >= 0) { b.status = "lost"; b.payout = 0; changed = true; }
-      else if (st.every(function (x) { return x === "won"; })) {
-        b.status = "won"; b.payout = Math.round(b.stake * b.odds);
+      else if (st.every(function (x) { return x === "void"; })) { b.status = "void"; b.payout = b.stake; S.balance += b.stake; changed = true; }
+      else if (st.every(function (x) { return x === "won" || x === "void"; })) {
+        var od = 1; b.legs.forEach(function (l, i) { if (st[i] === "won") od *= l.odds; });
+        b.status = "won"; b.payout = Math.round(b.stake * (st.indexOf("void") >= 0 ? od : b.odds));
         var rep = 0;
         if (S.loan) { rep = Math.min(S.loan.owed, Math.round(b.payout * 0.5)); S.loan.owed -= rep; if (S.loan.owed <= 0) S.loan = null; }
         b.repaid = rep; S.balance += b.payout - rep; changed = true;
@@ -559,10 +700,37 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
     for (var i = S.bets.length - 1; i >= 0; i--) if (S.bets[i].legs.some(function (l) { return l.gid === gid; })) return S.bets[i];
     return null;
   }
-  function hasSel(gid, side) { return sel.some(function (x) { return x.gid === gid && x.side === side; }); }
+  function hasSel(gid, side) { return sel.some(function (x) { return x.gid === gid && !x.type && x.side === side; }); }
+  function selKey(x) { return (x.type || "ml") + "|" + (x.side || "") + "|" + (x.line != null ? x.line : "") + "|" + (x.key || "") + "|" + (x.ou || ""); }
+  function isSel(x) { return sel.some(function (y) { return y.gid === x.gid && selKey(y) === selKey(x); }); }
+  // Une seule sélection par match dans un ticket : cliquer un autre pari du même match le remplace.
+  function toggleSel(x) {
+    var idx = -1; sel.forEach(function (y, i) { if (y.gid === x.gid) idx = i; });
+    if (idx >= 0 && selKey(sel[idx]) === selKey(x)) sel.splice(idx, 1);
+    else if (idx >= 0) sel[idx] = x;
+    else if (sel.length < 8) sel.push(x);
+  }
+  function selOdds(x) {
+    var g = findGame(x.gid);
+    if (x.type === "hcp") return hcpOdds(g, x.side, x.line);
+    if (x.type === "prop") { var pr = findProp(x.gid, x.key); return pr ? propOdds(pr, x.ou) : x.odds; }
+    return oddsOf(g, x.side);
+  }
+  function legText(l) {
+    if (l.type === "hcp") return SHORT[l.team] + " " + fmtLine(l.line);
+    if (l.type === "prop") return esc(l.name) + " · " + (l.ou === "over" ? "plus de " : "moins de ") + String(l.line).replace(".", ",") + " " + STAT[l.stat][1] + (l.val != null && l.val !== "void" ? " (" + l.val + ")" : l.val === "void" ? " (n'a pas joué)" : "");
+    return SHORT[l.team];
+  }
+  function legOf(x) {
+    var g = findGame(x.gid), o = selOdds(x);
+    if (x.type === "prop") { var pr = findProp(x.gid, x.key) || x; return { type: "prop", gid: g.id, team: pr.team, key: pr.key, pid: pr.pid, name: pr.name, stat: pr.stat, avg: pr.avg, line: pr.line, ou: x.ou, odds: o }; }
+    var l = { gid: g.id, side: x.side, team: x.side === "home" ? g.home : g.away, odds: o };
+    if (x.type === "hcp") { l.type = "hcp"; l.line = x.line; }
+    return l;
+  }
   function totalOdds() {
     var t = 1;
-    sel.forEach(function (x) { t *= oddsOf(findGame(x.gid), x.side); });
+    sel.forEach(function (x) { t *= selOdds(x); });
     return Math.round(t * 100) / 100;
   }
 
@@ -628,11 +796,15 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
         var bar = p != null ? '<div class="pbar"><i class="' + (p < 50 ? "low" : "") + '" style="width:' + Math.max(3, p) + '%"></i></div>' : '<div class="pbar"></div>';
         return '<div class="cell"><button class="yel' + (on ? " on" : "") + '" type="button" data-g="' + g.id + '" data-side="' + side + '"' + (locked ? " disabled" : "") + '><span class="nm">' + TEAMS[abbr] + '</span><span class="od">' + fmtOdd(oddsOf(g, side)) + (moves[g.id + (side === "home" ? "h" : "a")] ? '<i class="mv ' + (moves[g.id + (side === "home" ? "h" : "a")] > 0 ? "up" : "dn") + '">' + (moves[g.id + (side === "home" ? "h" : "a")] > 0 ? "▲" : "▼") + "</i>" : "") + "</span></button>" + bar + "</div>";
       }).join("") + "</div>";
+      if (!locked) {
+        s += '<button class="moreb" type="button" data-more="' + g.id + '" aria-expanded="' + !!more[g.id] + '">' + (more[g.id] ? "Masquer handicap &amp; joueurs" : "Handicap &amp; stats des joueurs &rsaquo;") + "</button>";
+        if (more[g.id]) s += moreHtml(g);
+      }
     }
     var b = myBet(g.id);
     if (b) {
-      var lbl = b.legs.length > 1 ? "Combiné ×" + b.legs.length : SHORT[b.legs[0].team];
-      s += '<div class="mybet">Ton pari : <b>' + fmtInt(b.stake) + "</b> · <b>" + lbl + "</b> à " + fmtOdd(b.odds) + ' <span class="st ' + b.status + '">' + (b.status === "pending" ? "en cours" : b.status === "won" ? "gagné +" + fmtInt(b.payout) : "perdu") + "</span></div>";
+      var lbl = b.legs.length > 1 ? "Combiné ×" + b.legs.length : legText(b.legs[0]);
+      s += '<div class="mybet">Ton pari : <b>' + fmtInt(b.stake) + "</b> · <b>" + lbl + "</b> à " + fmtOdd(b.odds) + ' <span class="st ' + b.status + '">' + (b.status === "pending" ? "en cours" : b.status === "won" ? "gagné +" + fmtInt(b.payout) : b.status === "void" ? "remboursé" : "perdu") + "</span></div>";
     }
     if (locked && !r) s += '<p class="closed">' + (now - g.t > 4 * 3600e3 ? "Paris fermés" : "Paris fermés : le match a commencé") + "</p>";
     return s + "</div>";
@@ -681,7 +853,7 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
   }
 
   function renderBets() {
-    var settled = S.bets.filter(function (b) { return b.status !== "pending"; });
+    var settled = S.bets.filter(function (b) { return b.status === "won" || b.status === "lost"; });
     var won = settled.filter(function (b) { return b.status === "won"; }).length;
     var net = settled.reduce(function (a, b) { return a + (b.payout - b.stake); }, 0);
     var rate = settled.length ? Math.round(100 * won / settled.length) + " %" : "–";
@@ -695,12 +867,12 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
     var shown = S.bets.filter(function (b) { return betFilter === "all" || b.status === betFilter; });
     if (!shown.length) out += '<p class="empty">' + (!S.bets.length ? "Aucun pari pour l'instant. Ça se voit que tu as peur." : "Aucun pari dans cette catégorie.") + "</p>";
     out += shown.slice().reverse().map(function (b) {
-      var st = b.status === "pending" ? "en cours" : b.status === "won" ? "gagné +" + fmtInt(b.payout) : "perdu −" + fmtInt(b.stake);
+      var st = b.status === "pending" ? "en cours" : b.status === "won" ? "gagné +" + fmtInt(b.payout) : b.status === "void" ? "remboursé" : "perdu −" + fmtInt(b.stake);
       var legs = b.legs.map(function (l) {
         var g = findGame(l.gid), s2 = legState(l);
-        return "<small>" + (g ? SHORT[g.home] + " - " + SHORT[g.away] : "") + " → <b>" + SHORT[l.team] + "</b> (" + fmtOdd(l.odds) + ') <span class="st ' + s2 + '">' + (s2 === "pending" ? "" : s2 === "won" ? "✓" : "✗") + "</span></small>";
+        return "<small>" + (g ? SHORT[g.home] + " - " + SHORT[g.away] : "") + " → <b>" + legText(l) + "</b> (" + fmtOdd(l.odds) + ') <span class="st ' + s2 + '">' + (s2 === "pending" ? "" : s2 === "won" ? "✓" : s2 === "void" ? "remboursé" : "✗") + "</span></small>";
       }).join("");
-      var title = b.legs.length > 1 ? "Combiné ×" + b.legs.length : SHORT[b.legs[0].team];
+      var title = b.legs.length > 1 ? "Combiné ×" + b.legs.length : legText(b.legs[0]);
       return '<div class="bet"><div class="t2"><span><b>' + title + "</b> à " + fmtOdd(b.odds) + " · " + fmtInt(b.stake) + ' jetons</span><span class="st ' + b.status + '">' + st + "</span></div>" + legs + (b.repaid ? "<small>dont " + fmtInt(b.repaid) + " remboursés à la banque</small>" : "") + "</div>";
     }).join("");
     var pend = S.bets.filter(function (b) { return b.status === "pending"; }).length;
@@ -726,12 +898,13 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
     }
     var combo = sel.length > 1;
     var legs = sel.map(function (x) {
-      var g = findGame(x.gid), team = x.side === "home" ? g.home : g.away;
-      return '<div class="sel"><span><b>' + TEAMS[team] + "</b><small>" + SHORT[g.home] + " - " + SHORT[g.away] + " · " + timeStr(g.t) + '</small></span><span class="od">' + fmtOdd(oddsOf(g, x.side)) + '</span><button class="x" type="button" data-rm="' + g.id + '" aria-label="Retirer ' + SHORT[team] + '">×</button></div>';
+      var g = findGame(x.gid), l = legOf(x), title = !x.type ? TEAMS[l.team] : x.type === "hcp" ? TEAMS[l.team] + " " + fmtLine(x.line) : legText(l);
+      var kind = x.type === "hcp" ? "Handicap · " : x.type === "prop" ? "Joueur · " : "";
+      return '<div class="sel"><span><b>' + title + "</b><small>" + kind + SHORT[g.home] + " - " + SHORT[g.away] + " · " + timeStr(g.t) + '</small></span><span class="od">' + fmtOdd(selOdds(x)) + '</span><button class="x" type="button" data-rm="' + g.id + '" aria-label="Retirer">×</button></div>';
     }).join("");
     var calc = "";
     if (combo) {
-      var parts = sel.map(function (x) { return fmtOdd(oddsOf(findGame(x.gid), x.side)); }).join(" × ");
+      var parts = sel.map(function (x) { return fmtOdd(selOdds(x)); }).join(" × ");
       calc = '<div class="combo"><div class="kv"><span>Cote du combiné</span><b class="big">' + fmtOdd(totalOdds()) + "</b></div><small>" + parts + "</small></div>";
     }
     var chips = [10, 20, 50, 100].map(function (v) {
@@ -772,7 +945,7 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
       });
     });
     sel = sel.filter(function (x) { return findGame(x.gid); });
-    if (sel.some(function (x) { return changed[x.gid + (x.side === "home" ? "h" : "a")]; })) oddsNote = "Les cotes de ton ticket ont changé. Le gain possible est recalculé.";
+    if (sel.some(function (x) { return !x.type && changed[x.gid + (x.side === "home" ? "h" : "a")]; })) oddsNote = "Les cotes de ton ticket ont changé. Le gain possible est recalculé.";
     if (updated) feedMeta.updated = updated;
     if (source) feedMeta.source = source;
     feedMeta.live = true;
@@ -795,7 +968,7 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
     var n = sel.length, now = Date.now();
     sel = sel.filter(function (x) { return findGame(x.gid).t > now; });
     if (n !== sel.length) { noteMsg = "Un match de ton ticket a commencé : il en a été retiré, car les paris sont fermés une fois le match lancé."; renderSlip(); }
-    settle();
+    settle(); resolveProps();
     renderWallet(); renderDays(); renderTabs(); renderMain();
     var nt = $("#note"); nt.hidden = !noteMsg; nt.textContent = noteMsg;
     renderSync();
@@ -812,13 +985,14 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
     if (t.dataset.info) { openInfo(t.dataset.info); return; }
     if (t.dataset.tab) { tab = t.dataset.tab; renderTabs(); renderMain(); return; }
     if (t.dataset.day) { curDay = t.dataset.day; query = ""; $("#q").value = ""; tab = "games"; renderAll(); return; }
-    if (t.dataset.g) {
-      var gid = t.dataset.g, side = t.dataset.side, idx = -1;
+    if (t.dataset.more) { var mg = findGame(t.dataset.more); more[t.dataset.more] = !more[t.dataset.more]; if (more[t.dataset.more] && mg) loadProps(mg); renderMain(); return; }
+    if (t.dataset.g || t.dataset.hcp || t.dataset.prop) {
+      var gid = t.dataset.g || t.dataset.hcp || t.dataset.prop, side = t.dataset.side, item;
       if (!findGame(gid) || findGame(gid).t <= Date.now() || result(findGame(gid))) { renderAll(); return; }
-      sel.forEach(function (x, i) { if (x.gid === gid) idx = i; });
-      if (idx >= 0 && sel[idx].side === side) sel.splice(idx, 1);
-      else if (idx >= 0) sel[idx].side = side;
-      else if (sel.length < 8) sel.push({ gid: gid, side: side });
+      if (t.dataset.hcp) item = { gid: gid, type: "hcp", side: side, line: parseFloat(t.dataset.line) };
+      else if (t.dataset.prop) { var pr = findProp(gid, t.dataset.key); if (!pr) return; item = { gid: gid, type: "prop", key: pr.key, ou: t.dataset.ou, odds: propOdds(pr, t.dataset.ou) }; }
+      else item = { gid: gid, side: side };
+      toggleSel(item);
       renderMain(); renderSlip();
       return;
     }
@@ -838,10 +1012,7 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
       if (!(v >= 10)) { err.textContent = "Mise minimale : 10 jetons."; return; }
       if (v > S.balance) { err.textContent = "Tu n'as que " + fmtInt(S.balance) + " jetons."; return; }
       for (var i = 0; i < sel.length; i++) if (findGame(sel[i].gid).t <= now) { err.textContent = "Un match a commencé, retire-le du ticket."; return; }
-      var legs = sel.map(function (x) {
-        var g = findGame(x.gid);
-        return { gid: g.id, side: x.side, team: x.side === "home" ? g.home : g.away, odds: oddsOf(g, x.side) };
-      });
+      var legs = sel.map(legOf);
       S.balance -= v;
       S.bets.push({ id: S.seq++, legs: legs, stake: v, odds: totalOdds(), status: "pending", payout: 0, at: now });
       save();
@@ -947,7 +1118,7 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
       var I = { min: ix("MIN"), pts: ix("PTS"), reb: ix("REB"), ast: ix("AST"), fg: ix("FG"), tp: ix("3PT"), stl: ix("STL"), blk: ix("BLK"), pm: ix("+/-") };
       var rows = (st.athletes || []).filter(function (a) { return !a.didNotPlay && a.stats && a.stats.length; }).map(function (a) {
         function v(k) { return I[k] >= 0 ? a.stats[I[k]] : ""; }
-        return { n: (a.athlete && (a.athlete.shortName || a.athlete.displayName)) || "?", st: !!a.starter, min: v("min"), pts: v("pts"), reb: v("reb"), ast: v("ast"), fg: v("fg"), tp: v("tp"), stl: v("stl"), blk: v("blk"), pm: v("pm") };
+        return { id: String((a.athlete && a.athlete.id) || ""), full: (a.athlete && a.athlete.displayName) || "", n: (a.athlete && (a.athlete.shortName || a.athlete.displayName)) || "?", st: !!a.starter, min: v("min"), pts: v("pts"), reb: v("reb"), ast: v("ast"), fg: v("fg"), tp: v("tp"), stl: v("stl"), blk: v("blk"), pm: v("pm") };
       });
       rows.sort(function (x, y) { return (parseInt(y.pts, 10) || 0) - (parseInt(x.pts, 10) || 0); });
       if (rows.length) out.box[ab] = rows;
@@ -956,7 +1127,8 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
       var ab = ourAbbr(t.team && t.team.abbreviation);
       out.lead[ab] = (t.leaders || []).map(function (c) {
         var l = (c.leaders || [])[0] || {};
-        return { cat: c.name || "", label: c.displayName || c.name || "", who: (l.athlete && (l.athlete.displayName || l.athlete.shortName)) || "", val: l.displayValue || "" };
+        var num = typeof l.value === "number" ? l.value : parseFloat(String(l.displayValue || "").replace(",", "."));
+        return { cat: c.name || "", label: c.displayName || c.name || "", id: String((l.athlete && l.athlete.id) || ""), who: (l.athlete && (l.athlete.displayName || l.athlete.shortName)) || "", val: l.displayValue || "", num: num };
       }).filter(function (x) { return x.who; });
     });
     (sum.lastFiveGames || []).forEach(function (t) {
@@ -1193,6 +1365,21 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
 
   /* ---------- Calendrier et résultats en direct (ESPN) ---------- */
   function amToDec(ml) { ml = Number(ml); if (!ml || isNaN(ml)) return null; return Math.round((ml > 0 ? 1 + ml / 100 : 1 + 100 / Math.abs(ml)) * 100) / 100; }
+  // Handicap publié par le bookmaker (ESPN). Rend la ligne côté équipe à domicile, ex. −7,5.
+  function parseSpread(od, hAb, aAb) {
+    var line = null, oh = null, oa = null;
+    var ps = od.pointSpread;
+    if (ps && ps.home) { var c = ps.home.close || ps.home.current || ps.home.open || {}; line = parseFloat(String(c.line || "").replace("−", "-")); oh = amToDec(c.odds); var ca = (ps.away && (ps.away.close || ps.away.current || ps.away.open)) || {}; oa = amToDec(ca.odds); }
+    if (line == null || isNaN(line)) {
+      var m = /^([A-Z]{2,4})\s+([+-]?\d+(?:\.\d+)?)$/.exec(String(od.details || "").trim());
+      if (m) { var v = parseFloat(m[2]); line = m[1] === String(hAb || "").toUpperCase() ? v : m[1] === String(aAb || "").toUpperCase() ? -v : null; }
+      else if (typeof od.spread === "number") line = od.spread;
+    }
+    if (line == null || isNaN(line) || Math.abs(line) > 30) return null;
+    if (oh == null) oh = amToDec(od.homeTeamOdds && od.homeTeamOdds.spreadOdds);
+    if (oa == null) oa = amToDec(od.awayTeamOdds && od.awayTeamOdds.spreadOdds);
+    return { line: line, oh: oh, oa: oa };
+  }
   var schedAt = 0;
   function syncSchedule() {
     var now = Date.now(), base = now - 5 * 3600e3, reqs = [];
@@ -1215,6 +1402,7 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
           if (st.state && st.state !== "pre" && g.t > Date.now()) { g.t = Date.now() - 1000; changed = true; }
           if (st.completed && g.sh == null) { var hs = parseInt(h.score, 10), as = parseInt(a.score, 10); if (!isNaN(hs) && !isNaN(as) && hs !== as) { g.sh = hs; g.sa = as; changed = true; } }
           var od = (comp.odds || [])[0];
+          if (od && st.state === "pre") { var spr = parseSpread(od, h.team && h.team.abbreviation, a.team && a.team.abbreviation); if (spr && (g.sp !== spr.line || g.spo !== spr.oh)) { g.sp = spr.line; g.spo = spr.oh; g.spa = spr.oa; changed = true; } }
           if (od && g.oh == null && st.state === "pre") {
             var oh = amToDec(od.homeTeamOdds && od.homeTeamOdds.moneyLine), oa = amToDec(od.awayTeamOdds && od.awayTeamOdds.moneyLine);
             if (oh && oa) { g.oh = oh; g.oa = oa; changed = true; }
