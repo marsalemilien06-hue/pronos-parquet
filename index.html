@@ -55,12 +55,12 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--red-soft); 
 
 /* header */
 .hdr { background: #000; border-bottom: 1px solid var(--line); box-shadow: 0 1px 0 rgba(255, 45, 58, 0.55); margin-inline: calc(-1 * max(16px, env(safe-area-inset-left, 0px))) calc(-1 * max(16px, env(safe-area-inset-right, 0px))); padding-inline: max(16px, env(safe-area-inset-left, 0px)) max(16px, env(safe-area-inset-right, 0px)); }
-.hdr-in { max-width: 1120px; margin: 0 auto; min-height: 60px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 28px; padding-block: 8px; }
-.logo { display: flex; align-items: center; gap: 10px; font-family: var(--fd); font-weight: 700; font-size: 1.5rem; letter-spacing: 0.14em; text-transform: uppercase; white-space: nowrap; line-height: 1; }
+.hdr-in { max-width: 1120px; margin: 0 auto; min-height: 60px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding-block: 8px; }
+.logo { display: flex; align-items: center; gap: 10px; font-family: var(--fd); font-weight: 700; font-size: 1.5rem; letter-spacing: 0.06em; text-transform: uppercase; white-space: nowrap; line-height: 1; }
 .logo svg { width: 28px; height: 28px; flex: 0 0 auto; }
 .logo em { font-style: normal; color: var(--red); }
 .nav { display: flex; gap: 2px; }
-.nv { min-height: 44px; padding: 0 14px; background: transparent; border: 0; color: var(--muted); font-family: var(--fd); font-weight: 600; font-size: 1.1rem; letter-spacing: 0.08em; text-transform: uppercase; }
+.nv { min-height: 44px; padding: 0 9px; background: transparent; border: 0; color: var(--muted); font-family: var(--fd); font-weight: 600; font-size: 1.05rem; letter-spacing: 0.06em; text-transform: uppercase; }
 .nv:hover { color: var(--ink); }
 .nv[aria-pressed="true"] { color: var(--ink); box-shadow: inset 0 -3px 0 var(--red); }
 .wallet { margin-left: auto; display: flex; align-items: stretch; gap: 0; border: 1px solid var(--line); background: var(--card); border-radius: 999px; overflow: hidden; }
@@ -333,6 +333,15 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
 .ibox td { text-align: right; padding: 6px; border-bottom: 1px solid var(--line); }
 .ibox th:first-child, .ibox td:first-child { text-align: left; }
 .ibox tr:last-child td { border-bottom: 0; }
+/* Soutien dans l'en-tête */
+.hright { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+.hright .wallet { margin-left: 0; }
+.hdrsup { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 44px; min-width: 44px; padding: 0 12px; border: 1px solid var(--line); border-radius: 999px; background: var(--card); color: var(--ink); text-decoration: none; font-family: var(--fd); font-weight: 600; font-size: 1rem; letter-spacing: 0.08em; text-transform: uppercase; white-space: nowrap; }
+.hdrsup:hover { border-color: var(--red); }
+.hdrsup[hidden] { display: none; }
+.hdrsup .t { display: none; }
+.hdrsup:hover .t, .hdrsup:focus-visible .t { display: inline; }
+@media (max-width: 560px) { .hdrsup { min-height: 40px; min-width: 40px; padding: 0 10px; } }
 /* Langue */
 .langb { min-height: 32px; min-width: 40px; padding: 0 10px; border: 1px solid var(--line); background: var(--card); color: var(--ink); border-radius: 999px; font-family: var(--fd); font-weight: 700; font-size: 0.9rem; letter-spacing: 0.08em; }
 .langb:hover { border-color: var(--red); }
@@ -343,7 +352,7 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
 .supbtn:hover { border-color: var(--red); }
 .ecosup { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; border-top: 1px solid var(--line); padding-top: 14px; }
 /* Compte */
-.acbtn { display: flex; align-items: center; gap: 7px; border: 0; border-left: 1px solid var(--line); background: transparent; color: var(--ink); padding: 0 16px; font-family: var(--fd); font-weight: 600; font-size: 1rem; letter-spacing: 0.06em; text-transform: uppercase; max-width: 150px; }
+.acbtn { display: flex; align-items: center; gap: 7px; border: 0; border-left: 1px solid var(--line); background: transparent; color: var(--ink); padding: 0 14px; font-family: var(--fd); font-weight: 600; font-size: 1rem; letter-spacing: 0.06em; text-transform: uppercase; max-width: 150px; }
 .acbtn span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .acbtn:hover { background: var(--soft); }
 .acdot { flex: none; width: 8px; height: 8px; border-radius: 50%; background: var(--muted); }
@@ -380,11 +389,14 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
       <button class="nv" type="button" data-tab="games" aria-pressed="true" data-en="Games">Matchs</button>
       <button class="nv" type="button" data-tab="bets" aria-pressed="false" data-en="My bets">Mes paris</button>
       <button class="nv" type="button" data-tab="standings" aria-pressed="false" data-en="Standings">Classement</button>
-      <button class="nv" type="button" data-tab="eco" aria-pressed="false" data-en="My savings">Mes économies</button>
+      <button class="nv" type="button" data-tab="eco" aria-pressed="false" data-en="My savings">Économies</button>
     </nav>
+    <div class="hright">
+    <a class="hdrsup" id="hdrsup" href="#" target="_blank" rel="noopener" hidden aria-label="Soutenir Hoops Court" data-en-al="Support Hoops Court" title="Soutenir Hoops Court"><span aria-hidden="true">&#9749;</span><span class="t" data-en="Support">Soutenir</span></a>
     <div class="wallet">
       <div class="sol"><small data-en="Token balance">Solde en jetons</small><b id="bal">40</b><small id="debt"></small></div>
       <button class="acbtn" id="acbtn" type="button" hidden><i class="acdot" id="acdot"></i><span id="acname">Compte</span></button>
+    </div>
     </div>
   </div>
 </header>
@@ -425,7 +437,6 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
 <div class="ov acov" id="acov" hidden><div class="ovp acp" id="acp" role="dialog" aria-modal="true" aria-label="Mon compte" data-en-al="My account"></div></div>
 <div class="ov" id="ov" hidden><div class="ovp" id="ovp" role="dialog" aria-modal="true" aria-label="Infos du match"></div></div>
 
-<div class="support" id="support" hidden><a class="supbtn" id="suplink" href="#" target="_blank" rel="noopener" data-en="&#9749; Support Hoops Court">&#9749; Soutenir Hoops Court</a><small data-en="Optional, it doesn't unlock anything: the app stays free and ad-free for everyone. It helps cover its upkeep.">Facultatif, ça ne débloque rien : l'appli reste gratuite et sans pub pour tout le monde. Ça aide à payer son entretien.</small></div>
 <p class="foot" data-en="Hoops Court is played only with tokens that have no value: you can't buy tokens or exchange them for money. The app is made to follow the NBA without betting money. If you find it hard to stop, or someone close to you is affected, free and confidential help exists: Gambling Therapy (gamblingtherapy.org, worldwide, many languages), 1-800-MY-RESET in the US, 0808 8020 133 in the UK, 09 74 75 13 13 in France. Schedule, results, injuries, stats and standings: ESPN, refreshed every hour when your device is online. Independent, free and ad-free app, not affiliated with the NBA, its teams or ESPN. Team badges are circles in team colors, not official logos. Your tokens and savings tracker stay on this device. If you create an account (a username and a password, no email), they are also saved online so you can get them back on another device or after deleting the app. <a href=&quot;privacy.html&quot; style=&quot;color:inherit&quot;>Privacy</a>">Hoops Court se joue uniquement avec des jetons sans valeur : on ne peut ni acheter de jetons, ni les échanger contre de l'argent. L'appli est faite pour suivre la NBA sans parier d'argent. Si tu as du mal à t'arrêter, ou si un proche est concerné, appelle Joueurs Info Service au 09 74 75 13 13 (anonyme et gratuit, tous les jours de 8h à 2h) ou va sur joueurs-info-service.fr. Calendrier, résultats, blessés, stats et classement : ESPN, actualisés toutes les heures quand l'appareil est connecté. Appli indépendante, gratuite et sans publicité, sans lien avec la NBA, ses équipes ni ESPN. Les écussons sont des pastilles aux couleurs des équipes, pas les logos officiels. Tes jetons et ton compteur d'économies restent sur cet appareil. Si tu crées un compte (un pseudo et un mot de passe, sans e-mail), ils sont aussi sauvegardés en ligne pour les retrouver sur un autre appareil ou après avoir effacé l'appli. <a href="confidentialite.html" style="color:inherit">Confidentialité</a></p>
 
 <script>
@@ -444,7 +455,7 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
   if (EN) {
     document.querySelectorAll("[data-en]").forEach(function (el) { el.innerHTML = el.getAttribute("data-en"); });
     document.querySelectorAll("[data-en-ph]").forEach(function (el) { el.setAttribute("placeholder", el.getAttribute("data-en-ph")); });
-    document.querySelectorAll("[data-en-al]").forEach(function (el) { el.setAttribute("aria-label", el.getAttribute("data-en-al")); });
+    document.querySelectorAll("[data-en-al]").forEach(function (el) { el.setAttribute("aria-label", el.getAttribute("data-en-al")); if (el.hasAttribute("title")) el.setAttribute("title", el.getAttribute("data-en-al")); });
     document.querySelectorAll("[data-en-href]").forEach(function (el) { el.setAttribute("href", el.getAttribute("data-en-href")); });
   }
   var lb = document.getElementById("langb");
@@ -550,7 +561,7 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
 
   // Lien de dons (Ko-fi). Vide = bouton caché.
   var KOFI = "https://ko-fi.com/emilien12491";
-  (function () { var sp = document.getElementById("support"); if (KOFI && sp) { sp.hidden = false; document.getElementById("suplink").href = KOFI; } })();
+  (function () { var sp = document.getElementById("hdrsup"); if (KOFI && sp) { sp.hidden = false; sp.href = KOFI; } })();
 
   var KEY = "pronosParquet_v1";
   var mem = null;
