@@ -1,7 +1,7 @@
 {
   "id": "/pronos-parquet/",
-  "name": "Pronos Parquet · NBA picks without betting money",
-  "short_name": "Pronos Parquet",
+  "name": "Hoops Court · Basketball picks, no real money",
+  "short_name": "Hoops Court",
   "description": "Follow the NBA and make picks with worthless play tokens. No real money, ever.",
   "lang": "en",
   "start_url": "./",
