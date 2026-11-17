@@ -415,7 +415,7 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
 <div class="ov acov" id="acov" hidden><div class="ovp acp" id="acp" role="dialog" aria-modal="true" aria-label="Mon compte"></div></div>
 <div class="ov" id="ov" hidden><div class="ovp" id="ovp" role="dialog" aria-modal="true" aria-label="Infos du match"></div></div>
 
-<p class="foot">Pronos Parquet se joue uniquement avec des jetons sans valeur : on ne peut ni acheter de jetons, ni les échanger contre de l'argent. L'appli est faite pour suivre la NBA sans parier d'argent. Si tu as du mal à t'arrêter, ou si un proche est concerné, appelle Joueurs Info Service au 09 74 75 13 13 (anonyme et gratuit, tous les jours de 8h à 2h) ou va sur joueurs-info-service.fr. Calendrier, résultats, blessés, stats et classement : ESPN, actualisés toutes les heures quand l'appareil est connecté. Appli indépendante, gratuite et sans publicité, sans lien avec la NBA, ses équipes ni ESPN. Les écussons sont des pastilles aux couleurs des équipes, pas les logos officiels. Tes jetons et ton compteur d'économies restent sur cet appareil. Si tu crées un compte (un pseudo et un mot de passe, sans e-mail), ils sont aussi sauvegardés en ligne pour les retrouver sur un autre appareil ou après avoir effacé l'appli.</p>
+<p class="foot">Pronos Parquet se joue uniquement avec des jetons sans valeur : on ne peut ni acheter de jetons, ni les échanger contre de l'argent. L'appli est faite pour suivre la NBA sans parier d'argent. Si tu as du mal à t'arrêter, ou si un proche est concerné, appelle Joueurs Info Service au 09 74 75 13 13 (anonyme et gratuit, tous les jours de 8h à 2h) ou va sur joueurs-info-service.fr. Calendrier, résultats, blessés, stats et classement : ESPN, actualisés toutes les heures quand l'appareil est connecté. Appli indépendante, gratuite et sans publicité, sans lien avec la NBA, ses équipes ni ESPN. Les écussons sont des pastilles aux couleurs des équipes, pas les logos officiels. Tes jetons et ton compteur d'économies restent sur cet appareil. Si tu crées un compte (un pseudo et un mot de passe, sans e-mail), ils sont aussi sauvegardés en ligne pour les retrouver sur un autre appareil ou après avoir effacé l'appli. <a href="confidentialite.html" style="color:inherit">Confidentialité</a></p>
 
 <script>
 (function () {
@@ -1690,6 +1690,7 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
       if (su) h += '<p class="imuted">Ta partie actuelle sur cet appareil (jetons, paris, économies) sera rattachée au nouveau compte.</p>';
       else h += '<p class="imuted">La partie de ton compte remplacera celle de cet appareil.</p>';
       h += '<p class="err" id="acerr">' + esc(AC.msg) + "</p>";
+      h += '<p class="imuted"><a href="confidentialite.html" style="color:inherit">Ce qu\'on garde sur ton compte</a></p>';
       h += '<button class="parier" type="submit"' + (AC.busy ? " disabled" : "") + ">" + (AC.busy ? "Patiente…" : su ? "Créer mon compte" : "Me connecter") + "</button></form>";
     }
     h += "</div>";
