@@ -144,7 +144,9 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--red-soft); 
 .mpmid { display: flex; flex-direction: column; align-items: center; line-height: 1.1; color: var(--muted); font-size: 0.82rem; }
 .mpmid b { font-family: var(--fd); font-size: 1.5rem; color: var(--ink); }
 .mpform { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 12px; }
+.mpform .h, .mpform .a { display: flex; align-items: center; gap: 8px; }
 .mpform .h { justify-self: end; } .mpform .a { justify-self: start; }
+.mpform .rk2 { line-height: 1.2; }
 .fdots { display: flex; gap: 4px; align-items: center; }
 .fdots i { width: 9px; height: 9px; transform: rotate(45deg); border-radius: 1px; background: var(--line); }
 .fdots i.w { background: var(--win); } .fdots i.l { background: var(--lose); }
@@ -1377,10 +1379,13 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
   }
   function sortConf(list) {
     list = list.slice();
+    // Ordre du tableau : pourcentage de victoires, puis nombre de victoires, puis rang officiel ESPN pour départager les égalités.
     list.sort(function (a, b) {
-      if (!isNaN(a.seed) && !isNaN(b.seed) && a.seed && b.seed) return a.seed - b.seed;
       var pa = a.w / Math.max(1, a.w + a.l), pb = b.w / Math.max(1, b.w + b.l);
-      return pb - pa || b.w - a.w;
+      if (Math.abs(pb - pa) > 1e-9) return pb - pa;
+      if (b.w !== a.w) return b.w - a.w;
+      var sa = a.seed > 0 ? a.seed : 99, sb = b.seed > 0 ? b.seed : 99;
+      return sa - sb;
     });
     var top = list[0];
     list.forEach(function (r) {
@@ -1395,7 +1400,7 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
     getJSON("https://site.api.espn.com/apis/v2/sports/basketball/nba/standings").then(parseStand)
       .then(function (d) { stand.data = d; stand.at = Date.now(); stand.state = "ok"; })
       .catch(function () { stand.state = "err"; stand.at = Date.now(); })
-      .then(function () { if (tab === "standings") renderStandings(); });
+      .then(function () { if (tab === "standings") renderStandings(); else if (tab === "games" && mv) renderMain(); });
   }
   setInterval(function () { if (tab === "standings") loadStand(true); }, HOUR);
   function renderStandings() {
