@@ -430,11 +430,10 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
 
 <script>
 (function () {
-  /* ---------- Langue : anglais par défaut, français si l'appareil est en français ---------- */
+  /* ---------- Langue : anglais par défaut, bouton pour passer en français ---------- */
   var LANG = (function () {
     try { var st = localStorage.getItem("pronosParquet_lang"); if (st === "fr" || st === "en") return st; } catch (e) {}
-    var ls = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || ""];
-    return String(ls[0] || "").toLowerCase().indexOf("fr") === 0 ? "fr" : "en";
+    return "en"; // anglais pour tout le monde au départ ; le bouton FR/EN retient le choix
   })();
   var EN = LANG === "en";
   function L(fr, en) { return EN ? en : fr; }
