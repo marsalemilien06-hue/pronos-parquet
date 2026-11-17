@@ -703,7 +703,9 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
       var title = b.legs.length > 1 ? "Combiné ×" + b.legs.length : SHORT[b.legs[0].team];
       return '<div class="bet"><div class="t2"><span><b>' + title + "</b> à " + fmtOdd(b.odds) + " · " + fmtInt(b.stake) + ' jetons</span><span class="st ' + b.status + '">' + st + "</span></div>" + legs + (b.repaid ? "<small>dont " + fmtInt(b.repaid) + " remboursés à la banque</small>" : "") + "</div>";
     }).join("");
-    out += '<div class="resetrow"><button class="link" type="button" id="reset">' + (resetArmed ? "Sûr ? Clique encore pour tout effacer" : "Repartir à " + START + " jetons") + "</button></div>";
+    var pend = S.bets.filter(function (b) { return b.status === "pending"; }).length;
+    if (pend) out += '<div class="resetrow"><button class="link" type="button" id="reset" disabled>Repartir à ' + START + ' jetons</button><p class="imuted" style="margin-top:8px">Impossible tant que ' + (pend > 1 ? "tes " + pend + " paris sont en cours" : "ton pari est en cours") + ". Attends la fin " + (pend > 1 ? "des matchs" : "du match") + ".</p></div>";
+    else out += '<div class="resetrow"><button class="link" type="button" id="reset">' + (resetArmed ? "Sûr ? Clique encore pour tout effacer" : "Repartir à " + START + " jetons") + "</button></div>";
     $("#main").innerHTML = out;
   }
 
@@ -848,6 +850,7 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
     }
     if (t.id === "bonus") { S.lastBonus = dayKey(Date.now()); S.balance += BONUS; save(); renderWallet(); renderSlip(); return; }
     if (t.id === "reset") {
+      if (S.bets.some(function (b) { return b.status === "pending"; })) { resetArmed = false; renderBets(); return; }
       if (!resetArmed) { resetArmed = true; renderBets(); setTimeout(function () { resetArmed = false; if (tab === "bets") renderBets(); }, 4000); return; }
       resetArmed = false; S = fresh(); save(); sel = []; stake = 10; renderAll(); renderSlip();
     }
