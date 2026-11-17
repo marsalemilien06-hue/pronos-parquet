@@ -1485,7 +1485,7 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
   });
 
   /* ---------- Calendrier et résultats en direct (ESPN) ---------- */
-  function amToDec(ml) { ml = Number(ml); if (!ml || isNaN(ml)) return null; return Math.round((ml > 0 ? 1 + ml / 100 : 1 + 100 / Math.abs(ml)) * 100) / 100; }
+  function amToDec(ml) { if (String(ml).toUpperCase() === "EVEN") return 2; ml = Number(String(ml == null ? "" : ml).replace("−", "-")); if (!ml || isNaN(ml)) return null; return Math.round((ml > 0 ? 1 + ml / 100 : 1 + 100 / Math.abs(ml)) * 100) / 100; }
   // Handicap publié par le bookmaker (ESPN). Rend la ligne côté équipe à domicile, ex. −7,5.
   function parseSpread(od, hAb, aAb) {
     var line = null, oh = null, oa = null;
@@ -1528,9 +1528,16 @@ input[type="number"]:focus { border-color: var(--red); outline: 0; }
           if (st.completed && g.sh == null) { var hs = parseInt(h.score, 10), as = parseInt(a.score, 10); if (!isNaN(hs) && !isNaN(as) && hs !== as) { g.sh = hs; g.sa = as; changed = true; } }
           var od = (comp.odds || [])[0];
           if (od && st.state === "pre") { var spr = parseSpread(od, h.team && h.team.abbreviation, a.team && a.team.abbreviation); if (spr) { if (spr.line != null && (g.sp !== spr.line || g.spo !== spr.oh)) { g.sp = spr.line; g.spo = spr.oh; g.spa = spr.oa; changed = true; } if (spr.tot != null && (g.tot !== spr.tot || g.too !== spr.too)) { g.tot = spr.tot; g.too = spr.too; g.tou = spr.tou; changed = true; } } }
-          if (od && g.oh == null && st.state === "pre") {
-            var oh = amToDec(od.homeTeamOdds && od.homeTeamOdds.moneyLine), oa = amToDec(od.awayTeamOdds && od.awayTeamOdds.moneyLine);
-            if (oh && oa) { g.oh = oh; g.oa = oa; changed = true; }
+          if (od && st.state === "pre") {
+            // Deux formats possibles chez ESPN : l'ancien (homeTeamOdds.moneyLine) et le nouveau (moneyline.home.close.odds).
+            var ml = od.moneyline || {}, mh = ml.home && (ml.home.close || ml.home.current || ml.home.open), ma = ml.away && (ml.away.close || ml.away.current || ml.away.open);
+            var oh = amToDec(mh && mh.odds) || amToDec(od.homeTeamOdds && od.homeTeamOdds.moneyLine), oa = amToDec(ma && ma.odds) || amToDec(od.awayTeamOdds && od.awayTeamOdds.moneyLine);
+            if (oh && oa && (g.oh !== oh || g.oa !== oa)) {
+              var k1 = g.id + "h", k2 = g.id + "a";
+              if (g.oh != null && Math.abs(g.oh - oh) > 0.004) moves[k1] = oh > g.oh ? 1 : -1;
+              if (g.oa != null && Math.abs(g.oa - oa) > 0.004) moves[k2] = oa > g.oa ? 1 : -1;
+              g.oh = oh; g.oa = oa; g.oe = ""; changed = true;
+            }
           }
         });
       });
